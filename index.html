@@ -7,95 +7,352 @@
 <meta name="theme-color" content="#2563eb">
 <meta name="description" content="Freedom — connect, share, and stay close to your community.">
 <title>Freedom — Connect Your World</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
-header{background:#fff;border-bottom:1px solid #e4e9f2;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0}
-.logo{font-size:25px;font-weight:800;color:#2563eb}
+header{background:#fff;border-bottom:1px solid #e4e9f2;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:26px;font-weight:800;color:#2563eb}
 .logo span{color:#172033}
-button{cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font-weight:700}
+button:disabled{opacity:.6;cursor:not-allowed}
 .primary{background:#2563eb;color:white}
+.secondary{background:#eaf2ff;color:#2455b4}
 main{max-width:1050px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}
 aside,.card{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:18px}
 aside p{padding:10px 8px;border-radius:8px;color:#46546a}
-aside p:first-of-type{background:#edf4ff;color:#2563eb;font-weight:bold}
-h1{font-size:27px;margin:0 0 8px}
+h1{font-size:28px;margin:12px 0 8px}
+h3{margin-top:0}
 .muted{color:#6c778b;line-height:1.5}
 .card{margin-top:18px}
-textarea{width:100%;min-height:85px;padding:13px;border:1px solid #dce3ee;border-radius:10px;font:inherit;resize:vertical}
-.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
-.post{line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+input,textarea{width:100%;padding:13px;border:1px solid #dce3ee;border-radius:10px;font:inherit;margin:6px 0 12px}
+textarea{min-height:100px;resize:vertical}
+label{font-size:14px;font-weight:700}
+.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .pill{display:inline-block;padding:6px 10px;border-radius:30px;background:#eaf2ff;color:#2455b4;font-size:12px;font-weight:bold}
+.post{line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.post-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#authPanel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+#authMessage,#status{overflow-wrap:anywhere}
 footer{text-align:center;padding:30px;color:#778196;font-size:13px}
-@media(max-width:650px){main{grid-template-columns:1fr;margin-top:16px}aside{display:none}header{padding:14px 16px}h1{font-size:23px}}
+@media(max-width:650px){main{grid-template-columns:1fr;margin-top:16px}aside{display:none}header{padding:14px 16px}h1{font-size:23px}#authPanel{grid-template-columns:1fr}}
 </style>
 </head>
+
 <body>
 <header>
   <div class="logo">Freedom<span>.</span></div>
   <span class="pill">YOUR COMMUNITY STARTS HERE</span>
+  <button id="logoutBtn" class="secondary" hidden>Log out</button>
 </header>
+
 <main>
   <aside>
     <h3>Your space</h3>
     <p>🏠 Home feed</p>
-    <p>👥 Friends</p>
-    <p>💬 Messages</p>
-    <p>📞 Voice calls</p>
-    <p>🎥 Video calls</p>
-    <p>🔔 Notifications</p>
-    <p>⚙️ Settings</p>
+    <p>👥 Friends — coming soon</p>
+    <p>💬 Messages — coming soon</p>
+    <p>📞 Voice calls — coming soon</p>
+    <p>🎥 Video calls — coming soon</p>
+    <p>🔔 Notifications — coming soon</p>
     <hr>
     <p class="muted">Your world. Your connections.</p>
   </aside>
+
   <section>
     <span class="pill">WELCOME TO FREEDOM</span>
     <h1>Connect your world.</h1>
-    <p class="muted">A new place to share ideas, celebrate moments, and bring people closer together.</p>
-    <div class="card">
+    <p class="muted">Create an account, share your thoughts, and connect with your community.</p>
+
+    <div class="card" id="authPanel">
+      <div>
+        <h3>Create your account</h3>
+        <label for="signupEmail">Email address</label>
+        <input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com">
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+        <button class="primary" id="signupBtn">Sign up</button>
+      </div>
+
+      <div>
+        <h3>Welcome back</h3>
+        <label for="loginEmail">Email address</label>
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
+        <button class="primary" id="loginBtn">Log in</button>
+      </div>
+      <p id="authMessage" class="muted" aria-live="polite" style="grid-column:1/-1"></p>
+    </div>
+
+    <div class="card" id="composer" hidden>
       <h3>Create a post</h3>
       <p class="muted">What's on your mind?</p>
-      <textarea id="postText" placeholder="Share something with your community..."></textarea>
+      <textarea id="postText" maxlength="1000" placeholder="Share something with your community..."></textarea>
       <div class="actions">
-        <span class="muted">✦ Share a positive moment</span>
-        <button class="primary" id="publish">Publish post</button>
+        <span class="muted">Share a positive moment 💙</span>
+        <button class="primary" id="publishBtn">Publish post</button>
       </div>
       <p id="status" class="muted" aria-live="polite"></p>
     </div>
-    <div id="feed">
-      <div class="card">
-        <span class="pill">FREEDOM COMMUNITY</span>
-        <h3>Every connection starts somewhere 💙</h3>
-        <p class="post">Welcome to Freedom! This is the beginning of a community where people can connect and share their stories.</p>
-        <p class="muted">Sample welcome post · Preview only</p>
-      </div>
+
+    <div class="card">
+      <h3>Community feed</h3>
+      <p id="feedMessage" class="muted">Sign in to view community posts.</p>
     </div>
+    <div id="feed"></div>
   </section>
 </main>
+
 <footer>Freedom App © 2026 · Built to bring people closer.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const input=document.getElementById('postText');
-const feed=document.getElementById('feed');
-const status=document.getElementById('status');
-document.getElementById('publish').addEventListener('click',()=>{
-  const message=input.value.trim();
-  if(!message){status.textContent='Write something first, then publish your post.';return;}
-  const card=document.createElement('div');
-  card.className='card';
-  const label=document.createElement('span');
-  label.className='pill';
-  label.textContent='YOUR PREVIEW POST';
-  const content=document.createElement('p');
-  content.className='post';
-  content.textContent=message;
-  const note=document.createElement('p');
-  note.className='muted';
-  note.textContent='Preview only — this post is not saved online.';
-  card.append(label,content,note);
-  feed.prepend(card);
-  input.value='';
-  status.textContent='Your post preview has been added!';
+"use strict";
+
+/* Supabase project connection */
+const SUPABASE_URL = "https://agyfqvpiacnncvnptprh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dvPr5WqSpw6BQKJzqOVVSg_pUAA4c2b";
+
+const authMessage = document.getElementById("authMessage");
+const status = document.getElementById("status");
+const feed = document.getElementById("feed");
+const feedMessage = document.getElementById("feedMessage");
+const authPanel = document.getElementById("authPanel");
+const composer = document.getElementById("composer");
+const logoutBtn = document.getElementById("logoutBtn");
+const publishBtn = document.getElementById("publishBtn");
+const postText = document.getElementById("postText");
+
+let currentUser = null;
+let supabaseClient = null;
+
+function showAuthMessage(message) {
+  authMessage.textContent = message;
+}
+
+function friendlyError(error) {
+  if (!error) return "Something went wrong. Please try again.";
+  if (error.message && error.message.toLowerCase().includes("invalid login")) {
+    return "Email or password is incorrect. Please check and try again.";
+  }
+  return error.message || "Something went wrong. Please try again.";
+}
+
+function updateInterface() {
+  const loggedIn = Boolean(currentUser);
+  authPanel.hidden = loggedIn;
+  composer.hidden = !loggedIn;
+  logoutBtn.hidden = !loggedIn;
+
+  if (loggedIn) {
+    feedMessage.textContent = "Welcome! Loading community posts...";
+  } else {
+    feedMessage.textContent = "Please sign up or log in to view community posts.";
+    feed.replaceChildren();
+  }
+}
+
+function addPostCard(post) {
+  const card = document.createElement("article");
+  card.className = "card";
+
+  const heading = document.createElement("div");
+  heading.className = "post-head";
+
+  const author = document.createElement("strong");
+  author.textContent = post.author_email || "Freedom member";
+
+  const date = document.createElement("span");
+  date.className = "muted";
+  const parsedDate = new Date(post.created_at);
+  date.textContent = Number.isNaN(parsedDate.getTime())
+    ? ""
+    : parsedDate.toLocaleString();
+
+  const content = document.createElement("p");
+  content.className = "post";
+  content.textContent = post.content;
+
+  heading.append(author, date);
+  card.append(heading, content);
+  feed.append(card);
+}
+
+async function loadPosts() {
+  if (!currentUser) return;
+
+  feed.replaceChildren();
+  feedMessage.textContent = "Loading posts...";
+
+  const { data, error } = await supabaseClient
+    .from("posts")
+    .select("id,user_id,content,created_at")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    feedMessage.textContent = "Could not load posts: " + friendlyError(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    feedMessage.textContent = "No posts yet. Be the first to share something!";
+    return;
+  }
+
+  data.forEach(addPostCard);
+  feedMessage.textContent = "Showing the latest community posts.";
+}
+
+document.getElementById("signupBtn").addEventListener("click", async () => {
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+
+  if (!email || !password) {
+    showAuthMessage("Please enter your email and password.");
+    return;
+  }
+
+  if (password.length < 6) {
+    showAuthMessage("Please use a password with at least 6 characters.");
+    return;
+  }
+
+  const button = document.getElementById("signupBtn");
+  button.disabled = true;
+  showAuthMessage("Creating your account...");
+
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin + window.location.pathname
+      }
+    });
+
+    if (error) throw error;
+
+    if (data.session) {
+      showAuthMessage("Your account is ready!");
+    } else {
+      showAuthMessage("Account request received. Check your email for a confirmation link before logging in.");
+    }
+  } catch (error) {
+    showAuthMessage(friendlyError(error));
+  } finally {
+    button.disabled = false;
+  }
 });
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (!email || !password) {
+    showAuthMessage("Please enter your email and password.");
+    return;
+  }
+
+  const button = document.getElementById("loginBtn");
+  button.disabled = true;
+  showAuthMessage("Logging in...");
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+    if (error) throw error;
+    showAuthMessage("You are logged in!");
+  } catch (error) {
+    showAuthMessage(friendlyError(error));
+  } finally {
+    button.disabled = false;
+  }
+});
+
+logoutBtn.addEventListener("click", async () => {
+  logoutBtn.disabled = true;
+  const { error } = await supabaseClient.auth.signOut();
+  logoutBtn.disabled = false;
+
+  if (error) {
+    status.textContent = friendlyError(error);
+  } else {
+    showAuthMessage("You have logged out.");
+  }
+});
+
+publishBtn.addEventListener("click", async () => {
+  if (!currentUser) {
+    status.textContent = "Please log in before publishing.";
+    return;
+  }
+
+  const content = postText.value.trim();
+  if (!content) {
+    status.textContent = "Write something before publishing.";
+    return;
+  }
+
+  publishBtn.disabled = true;
+  status.textContent = "Publishing your post...";
+
+  try {
+    const { error } = await supabaseClient
+      .from("posts")
+      .insert({
+        user_id: currentUser.id,
+        content
+      });
+
+    if (error) throw error;
+
+    postText.value = "";
+    status.textContent = "Your post was saved!";
+    await loadPosts();
+  } catch (error) {
+    status.textContent = "Could not publish: " + friendlyError(error);
+  } finally {
+    publishBtn.disabled = false;
+  }
+});
+
+async function initialize() {
+  if (!window.supabase) {
+    showAuthMessage("The connection library did not load. Refresh the page and try again.");
+    return;
+  }
+
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    showAuthMessage("Could not check your login: " + friendlyError(error));
+  }
+
+  currentUser = data && data.session ? data.session.user : null;
+  updateInterface();
+
+  if (currentUser) await loadPosts();
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session ? session.user : null;
+    updateInterface();
+
+    if (currentUser) {
+      loadPosts();
+    }
+  });
+}
+
+initialize();
 </script>
 </body>
 </html>
