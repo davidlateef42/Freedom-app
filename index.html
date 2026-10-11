@@ -9,33 +9,197 @@
 <title>Freedom — Connect Your World</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
-header{background:#fff;border-bottom:1px solid #e4e9f2;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{font-size:26px;font-weight:800;color:#2563eb}
-.logo span{color:#172033}
-button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font-weight:700}
-button:disabled{opacity:.6;cursor:not-allowed}
-.primary{background:#2563eb;color:white}
-.secondary{background:#eaf2ff;color:#2455b4}
-main{max-width:1050px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}
-aside,.card{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:18px}
-aside p{padding:10px 8px;border-radius:8px;color:#46546a}
-h1{font-size:28px;margin:12px 0 8px}
-h3{margin-top:0}
-.muted{color:#6c778b;line-height:1.5}
-.card{margin-top:18px}
-input,textarea{width:100%;padding:13px;border:1px solid #dce3ee;border-radius:10px;font:inherit;margin:6px 0 12px}
-textarea{min-height:100px;resize:vertical}
-label{font-size:14px;font-weight:700}
-.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
-.pill{display:inline-block;padding:6px 10px;border-radius:30px;background:#eaf2ff;color:#2455b4;font-size:12px;font-weight:bold}
-.post{line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
-.post-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-#authPanel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-#authMessage,#status{overflow-wrap:anywhere}
-footer{text-align:center;padding:30px;color:#778196;font-size:13px}
-@media(max-width:650px){main{grid-template-columns:1fr;margin-top:16px}aside{display:none}header{padding:14px 16px}h1{font-size:23px}#authPanel{grid-template-columns:1fr}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #172033;
+}
+
+header {
+  background: #fff;
+  border-bottom: 1px solid #e4e9f2;
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.logo span {
+  color: #172033;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.secondary {
+  background: #eaf2ff;
+  color: #2455b4;
+}
+
+main {
+  max-width: 1050px;
+  margin: 28px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 22px;
+}
+
+aside, .card {
+  background: white;
+  border: 1px solid #e5eaf2;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+aside p {
+  padding: 10px 8px;
+  border-radius: 8px;
+  color: #46546a;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 12px 0 8px;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.muted {
+  color: #6c778b;
+  line-height: 1.5;
+}
+
+.card {
+  margin-top: 18px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #dce3ee;
+  border-radius: 10px;
+  font: inherit;
+  margin: 6px 0 12px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 30px;
+  background: #eaf2ff;
+  color: #2455b4;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.post {
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.post-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#authPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* Make hidden sections stay hidden */
+#authPanel[hidden],
+#composer[hidden],
+#logoutBtn[hidden] {
+  display: none !important;
+}
+
+#authMessage, #status {
+  overflow-wrap: anywhere;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #778196;
+  font-size: 13px;
+}
+
+@media (max-width: 650px) {
+  main {
+    grid-template-columns: 1fr;
+    margin-top: 16px;
+  }
+
+  aside {
+    display: none;
+  }
+
+  header {
+    padding: 14px 16px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  #authPanel {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 
@@ -62,59 +226,88 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
   <section>
     <span class="pill">WELCOME TO FREEDOM</span>
     <h1>Connect your world.</h1>
-    <p class="muted">Create an account, share your thoughts, and connect with your community.</p>
+    <p class="muted">
+      Create an account, share your thoughts, and connect with your community.
+    </p>
 
     <div class="card" id="authPanel">
       <div>
         <h3>Create your account</h3>
+
         <label for="signupEmail">Email address</label>
-        <input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com">
+        <input
+          id="signupEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+        >
+
         <label for="signupPassword">Password</label>
-        <input id="signupPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+        <input
+          id="signupPassword"
+          type="password"
+          autocomplete="new-password"
+          placeholder="At least 6 characters"
+        >
+
         <button class="primary" id="signupBtn">Sign up</button>
       </div>
 
       <div>
         <h3>Welcome back</h3>
+
         <label for="loginEmail">Email address</label>
-        <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com">
+        <input
+          id="loginEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+        >
+
         <label for="loginPassword">Password</label>
-        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
+        <input
+          id="loginPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Your password"
+        >
+
         <button class="primary" id="loginBtn">Log in</button>
       </div>
-      
-<p id="authMessage" class="muted" aria-live="polite" style="grid-column:1/-1"></p>
 
-<div id="verifyPanel" style="grid-column:1/-1;display:none">
-  <h3>Verify your email</h3>
-  <p class="muted">Enter the email address you signed up with and the confirmation code from your email.</p>
-
-  <label for="verifyEmail">Email address</label>
-  <input id="verifyEmail" type="email" autocomplete="email" placeholder="you@example.com">
-
-  <label for="verifyCode">Confirmation code</label>
-  <input id="verifyCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code">
-
-  <button class="primary" id="verifyBtn">Verify email</button>
-  <p id="verifyMessage" class="muted" aria-live="polite"></p>
-</div>
+      <p
+        id="authMessage"
+        class="muted"
+        aria-live="polite"
+        style="grid-column:1/-1"
+      ></p>
     </div>
 
     <div class="card" id="composer" hidden>
       <h3>Create a post</h3>
       <p class="muted">What's on your mind?</p>
-      <textarea id="postText" maxlength="1000" placeholder="Share something with your community..."></textarea>
+
+      <textarea
+        id="postText"
+        maxlength="1000"
+        placeholder="Share something with your community..."
+      ></textarea>
+
       <div class="actions">
         <span class="muted">Share a positive moment 💙</span>
         <button class="primary" id="publishBtn">Publish post</button>
       </div>
+
       <p id="status" class="muted" aria-live="polite"></p>
     </div>
 
     <div class="card">
       <h3>Community feed</h3>
-      <p id="feedMessage" class="muted">Sign in to view community posts.</p>
+      <p id="feedMessage" class="muted">
+        Sign in to view community posts.
+      </p>
     </div>
+
     <div id="feed"></div>
   </section>
 </main>
@@ -122,19 +315,18 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
 <footer>Freedom App © 2026 · Built to bring people closer.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 "use strict";
 
 /* Supabase project connection */
-const SUPABASE_URL = "https://agyfqvpiacnncvnptprh.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dvPr5WqSpw6BQKJzqOVVSg_pUAA4c2b";
+const SUPABASE_URL =
+  "https://agyfqvpiacnncvnptprh.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_dvPr5WqSpw6BQKJzqOVVSg_pUAA4c2b";
 
 const authMessage = document.getElementById("authMessage");
-const verifyPanel = document.getElementById("verifyPanel");
-const verifyEmail = document.getElementById("verifyEmail");
-const verifyCode = document.getElementById("verifyCode");
-const verifyBtn = document.getElementById("verifyBtn");
-const verifyMessage = document.getElementById("verifyMessage");
 const status = document.getElementById("status");
 const feed = document.getElementById("feed");
 const feedMessage = document.getElementById("feedMessage");
@@ -143,6 +335,8 @@ const composer = document.getElementById("composer");
 const logoutBtn = document.getElementById("logoutBtn");
 const publishBtn = document.getElementById("publishBtn");
 const postText = document.getElementById("postText");
+const signupBtn = document.getElementById("signupBtn");
+const loginBtn = document.getElementById("loginBtn");
 
 let currentUser = null;
 let supabaseClient = null;
@@ -152,15 +346,23 @@ function showAuthMessage(message) {
 }
 
 function friendlyError(error) {
-  if (!error) return "Something went wrong. Please try again.";
-  if (error.message && error.message.toLowerCase().includes("invalid login")) {
+  if (!error) {
+    return "Something went wrong. Please try again.";
+  }
+
+  const message = error.message || "";
+
+  if (message.toLowerCase().includes("invalid login")) {
     return "Email or password is incorrect. Please check and try again.";
   }
-  return error.message || "Something went wrong. Please try again.";
+
+  return message || "Something went wrong. Please try again.";
 }
 
+/* Show the correct sections based on login status */
 function updateInterface() {
   const loggedIn = Boolean(currentUser);
+
   authPanel.hidden = loggedIn;
   composer.hidden = !loggedIn;
   logoutBtn.hidden = !loggedIn;
@@ -168,11 +370,15 @@ function updateInterface() {
   if (loggedIn) {
     feedMessage.textContent = "Welcome! Loading community posts...";
   } else {
-    feedMessage.textContent = "Please sign up or log in to view community posts.";
+    feedMessage.textContent =
+      "Please sign up or log in to view community posts.";
+
     feed.replaceChildren();
+    status.textContent = "";
   }
 }
 
+/* Display an individual community post */
 function addPostCard(post) {
   const card = document.createElement("article");
   card.className = "card";
@@ -185,82 +391,57 @@ function addPostCard(post) {
 
   const date = document.createElement("span");
   date.className = "muted";
+
   const parsedDate = new Date(post.created_at);
+
   date.textContent = Number.isNaN(parsedDate.getTime())
     ? ""
     : parsedDate.toLocaleString();
 
   const content = document.createElement("p");
   content.className = "post";
-  content.textContent = post.content;
+  content.textContent = post.content || "";
 
   heading.append(author, date);
   card.append(heading, content);
   feed.append(card);
 }
 
+/* Load posts from the Supabase database */
 async function loadPosts() {
-  if (!currentUser) return;
+  if (!currentUser || !supabaseClient) return;
 
   feed.replaceChildren();
   feedMessage.textContent = "Loading posts...";
 
-  const { data, error } = await supabaseClient
-    .from("posts")
-    .select("id,user_id,content,created_at")
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  if (error) {
-    feedMessage.textContent = "Could not load posts: " + friendlyError(error);
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    feedMessage.textContent = "No posts yet. Be the first to share something!";
-    return;
-  }
-
-  data.forEach(addPostCard);
-  feedMessage.textContent = "Showing the latest community posts.";
-}
-verifyBtn.addEventListener("click", async () => {
-  const email = verifyEmail.value.trim();
-  const token = verifyCode.value.trim();
-
-  if (!email || !token) {
-    verifyMessage.textContent = "Enter your email and confirmation code.";
-    return;
-  }
-
-  verifyBtn.disabled = true;
-  verifyMessage.textContent = "Verifying your email...";
-
   try {
-    const { data, error } = await supabaseClient.auth.verifyOtp({
-      email,
-      token,
-      type: "signup"
-    });
+    const { data, error } = await supabaseClient
+      .from("posts")
+      .select("id,user_id,content,created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
 
     if (error) throw error;
 
-    verifyMessage.textContent = "Your email is verified successfully!";
-    verifyPanel.style.display = "none";
-    showAuthMessage("Welcome to Freedom App!");
-
-    if (data && data.user) {
-      currentUser = data.user;
-      updateInterface();
-      await loadPosts();
+    if (!data || data.length === 0) {
+      feedMessage.textContent =
+        "No posts yet. Be the first to share something!";
+      return;
     }
+
+    data.forEach(addPostCard);
+
+    feedMessage.textContent =
+      "Showing the latest community posts.";
+
   } catch (error) {
-    verifyMessage.textContent = friendlyError(error);
-  } finally {
-    verifyBtn.disabled = false;
+    feedMessage.textContent =
+      "Could not load posts: " + friendlyError(error);
   }
-});
-document.getElementById("signupBtn").addEventListener("click", async () => {
+}
+
+/* Create a new account */
+signupBtn.addEventListener("click", async () => {
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
 
@@ -274,8 +455,7 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
     return;
   }
 
-  const button = document.getElementById("signupBtn");
-  button.disabled = true;
+  signupBtn.disabled = true;
   showAuthMessage("Creating your account...");
 
   try {
@@ -283,28 +463,33 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin + window.location.pathname
+        emailRedirectTo:
+          window.location.origin + window.location.pathname
       }
     });
 
     if (error) throw error;
 
-    if (data.session) {
+    if (data.session && data.user) {
+      currentUser = data.user;
+      updateInterface();
       showAuthMessage("Your account is ready!");
+      await loadPosts();
     } else {
-    verifyPanel.style.display = "block";
-verifyEmail.value = email;
-verifyMessage.textContent = "Enter the confirmation code from your email.";
-showAuthMessage("Check your email and enter the confirmation code below.");
+      showAuthMessage(
+        "Your account request was received. Check your email and click the confirmation link before logging in."
+      );
     }
+
   } catch (error) {
     showAuthMessage(friendlyError(error));
   } finally {
-    button.disabled = false;
+    signupBtn.disabled = false;
   }
 });
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
+/* Log in and update the interface */
+loginBtn.addEventListener("click", async () => {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
 
@@ -313,36 +498,52 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     return;
   }
 
-  const button = document.getElementById("loginBtn");
-  button.disabled = true;
+  loginBtn.disabled = true;
   showAuthMessage("Logging in...");
 
   try {
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
     if (error) throw error;
-    showAuthMessage("You are logged in!");
+
+    currentUser = data.user;
+    updateInterface();
+
+    status.textContent = "You are logged in successfully!";
+    await loadPosts();
+
   } catch (error) {
     showAuthMessage(friendlyError(error));
   } finally {
-    button.disabled = false;
+    loginBtn.disabled = false;
   }
 });
 
+/* Log out */
 logoutBtn.addEventListener("click", async () => {
   logoutBtn.disabled = true;
-  const { error } = await supabaseClient.auth.signOut();
-  logoutBtn.disabled = false;
 
-  if (error) {
-    status.textContent = friendlyError(error);
-  } else {
+  try {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) throw error;
+
+    currentUser = null;
+    updateInterface();
     showAuthMessage("You have logged out.");
+
+  } catch (error) {
+    status.textContent = friendlyError(error);
+  } finally {
+    logoutBtn.disabled = false;
   }
 });
 
+/* Publish a community post */
 publishBtn.addEventListener("click", async () => {
   if (!currentUser) {
     status.textContent = "Please log in before publishing.";
@@ -350,6 +551,7 @@ publishBtn.addEventListener("click", async () => {
   }
 
   const content = postText.value.trim();
+
   if (!content) {
     status.textContent = "Write something before publishing.";
     return;
@@ -363,7 +565,7 @@ publishBtn.addEventListener("click", async () => {
       .from("posts")
       .insert({
         user_id: currentUser.id,
-        content
+        content: content
       });
 
     if (error) throw error;
@@ -371,16 +573,21 @@ publishBtn.addEventListener("click", async () => {
     postText.value = "";
     status.textContent = "Your post was saved!";
     await loadPosts();
+
   } catch (error) {
-    status.textContent = "Could not publish: " + friendlyError(error);
+    status.textContent =
+      "Could not publish: " + friendlyError(error);
   } finally {
     publishBtn.disabled = false;
   }
 });
 
+/* Restore the existing login session when the page opens */
 async function initialize() {
   if (!window.supabase) {
-    showAuthMessage("The connection library did not load. Refresh the page and try again.");
+    showAuthMessage(
+      "The connection library did not load. Refresh the page and try again."
+    );
     return;
   }
 
@@ -392,14 +599,21 @@ async function initialize() {
   const { data, error } = await supabaseClient.auth.getSession();
 
   if (error) {
-    showAuthMessage("Could not check your login: " + friendlyError(error));
+    showAuthMessage(
+      "Could not check your login: " + friendlyError(error)
+    );
   }
 
-  currentUser = data && data.session ? data.session.user : null;
+  currentUser =
+    data && data.session ? data.session.user : null;
+
   updateInterface();
 
-  if (currentUser) await loadPosts();
+  if (currentUser) {
+    await loadPosts();
+  }
 
+  /* Keep the interface in sync when login status changes */
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     currentUser = session ? session.user : null;
     updateInterface();
