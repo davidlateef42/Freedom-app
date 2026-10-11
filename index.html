@@ -82,7 +82,22 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
         <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
         <button class="primary" id="loginBtn">Log in</button>
       </div>
-      <p id="authMessage" class="muted" aria-live="polite" style="grid-column:1/-1"></p>
+      
+<p id="authMessage" class="muted" aria-live="polite" style="grid-column:1/-1"></p>
+
+<div id="verifyPanel" style="grid-column:1/-1;display:none">
+  <h3>Verify your email</h3>
+  <p class="muted">Enter the email address you signed up with and the confirmation code from your email.</p>
+
+  <label for="verifyEmail">Email address</label>
+  <input id="verifyEmail" type="email" autocomplete="email" placeholder="you@example.com">
+
+  <label for="verifyCode">Confirmation code</label>
+  <input id="verifyCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code">
+
+  <button class="primary" id="verifyBtn">Verify email</button>
+  <p id="verifyMessage" class="muted" aria-live="polite"></p>
+</div>
     </div>
 
     <div class="card" id="composer" hidden>
