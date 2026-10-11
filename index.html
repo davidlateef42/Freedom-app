@@ -224,7 +224,42 @@ async function loadPosts() {
   data.forEach(addPostCard);
   feedMessage.textContent = "Showing the latest community posts.";
 }
+verifyBtn.addEventListener("click", async () => {
+  const email = verifyEmail.value.trim();
+  const token = verifyCode.value.trim();
 
+  if (!email || !token) {
+    verifyMessage.textContent = "Enter your email and confirmation code.";
+    return;
+  }
+
+  verifyBtn.disabled = true;
+  verifyMessage.textContent = "Verifying your email...";
+
+  try {
+    const { data, error } = await supabaseClient.auth.verifyOtp({
+      email,
+      token,
+      type: "signup"
+    });
+
+    if (error) throw error;
+
+    verifyMessage.textContent = "Your email is verified successfully!";
+    verifyPanel.style.display = "none";
+    showAuthMessage("Welcome to Freedom App!");
+
+    if (data && data.user) {
+      currentUser = data.user;
+      updateInterface();
+      await loadPosts();
+    }
+  } catch (error) {
+    verifyMessage.textContent = friendlyError(error);
+  } finally {
+    verifyBtn.disabled = false;
+  }
+});
 document.getElementById("signupBtn").addEventListener("click", async () => {
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
@@ -257,7 +292,10 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
     if (data.session) {
       showAuthMessage("Your account is ready!");
     } else {
-      showAuthMessage("Account request received. Check your email for a confirmation link before logging in.");
+    verifyPanel.style.display = "block";
+verifyEmail.value = email;
+verifyMessage.textContent = "Enter the confirmation code from your email.";
+showAuthMessage("Check your email and enter the confirmation code below.");
     }
   } catch (error) {
     showAuthMessage(friendlyError(error));
