@@ -614,14 +614,11 @@ async function initialize() {
   }
 
   /* Keep the interface in sync when login status changes */
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    currentUser = session ? session.user : null;
-    updateInterface();
 
-    if (currentUser) {
-      loadPosts();
-    }
-  });
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  currentUser = session ? session.user : null;
+  updateInterface();
+});
 }
 
 initialize();
