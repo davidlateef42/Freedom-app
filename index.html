@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,8 +118,10 @@ textarea {
 }
 
 label {
+  display: block;
   font-size: 14px;
   font-weight: 700;
+  margin-top: 8px;
 }
 
 .actions {
@@ -145,13 +146,60 @@ label {
   line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  margin-bottom: 0;
 }
 
 .post-head {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.author-name {
+  overflow-wrap: anywhere;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eaf2ff;
+  border: 1px solid #dce3ee;
+}
+
+.avatar-placeholder {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eaf2ff;
+  color: #2455b4;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.profile-preview {
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #dce3ee;
+  margin: 10px 0;
 }
 
 #authPanel {
@@ -160,17 +208,18 @@ label {
   gap: 18px;
 }
 
-  
-/* Make hidden sections stay hidden */
 #authPanel[hidden],
 #welcomePanel[hidden],
 #composer[hidden],
-#logoutBtn[hidden] {
+#profilePanel[hidden],
+#logoutBtn[hidden],
+#profileBtn[hidden] {
   display: none !important;
 }
 
-
-#authMessage, #status {
+#authMessage,
+#status,
+#profileMessage {
   overflow-wrap: anywhere;
 }
 
@@ -210,7 +259,15 @@ footer {
 <header>
   <div class="logo">Freedom<span>.</span></div>
   <span class="pill">YOUR COMMUNITY STARTS HERE</span>
-  <button id="logoutBtn" class="secondary" hidden>Log out</button>
+
+  <div class="actions">
+    <button id="profileBtn" class="secondary" hidden>
+      Edit profile
+    </button>
+    <button id="logoutBtn" class="secondary" hidden>
+      Log out
+    </button>
+  </div>
 </header>
 
 <main>
@@ -227,15 +284,14 @@ footer {
   </aside>
 
   <section>
-    
-<div id="welcomePanel">
-  <span class="pill">WELCOME TO FREEDOM</span>
-  <h1>Connect your world.</h1>
-  <p class="muted">
-    Create an account, share your thoughts, and connect with your community.
-  </p>
-</div>
 
+    <div id="welcomePanel">
+      <span class="pill">WELCOME TO FREEDOM</span>
+      <h1>Connect your world.</h1>
+      <p class="muted">
+        Create an account, share your thoughts, and connect with your community.
+      </p>
+    </div>
 
     <div class="card" id="authPanel">
       <div>
@@ -308,6 +364,50 @@ footer {
       <p id="status" class="muted" aria-live="polite"></p>
     </div>
 
+    <div class="card" id="profilePanel" hidden>
+      <h3>Edit your profile</h3>
+      <p class="muted">
+        Choose the name and picture your community will see.
+      </p>
+
+      <label for="profileName">Display name</label>
+      <input
+        id="profileName"
+        type="text"
+        maxlength="40"
+        placeholder="Enter your display name"
+      >
+
+      <label for="avatarFile">Profile picture</label>
+      <input
+        id="avatarFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+      >
+
+      <p class="muted">
+        Use a JPG, PNG, or WebP picture. Maximum size: 2 MB.
+      </p>
+
+      <img
+        id="avatarPreview"
+        class="profile-preview"
+        alt="Profile picture preview"
+        hidden
+      >
+
+      <div class="actions">
+        <button class="primary" id="saveProfileBtn">
+          Save profile
+        </button>
+        <button class="secondary" id="cancelProfileBtn">
+          Cancel
+        </button>
+      </div>
+
+      <p id="profileMessage" class="muted" aria-live="polite"></p>
+    </div>
+
     <div class="card">
       <h3>Community feed</h3>
       <p id="feedMessage" class="muted">
@@ -316,6 +416,7 @@ footer {
     </div>
 
     <div id="feed"></div>
+
   </section>
 </main>
 
@@ -337,17 +438,30 @@ const authMessage = document.getElementById("authMessage");
 const status = document.getElementById("status");
 const feed = document.getElementById("feed");
 const feedMessage = document.getElementById("feedMessage");
+
 const authPanel = document.getElementById("authPanel");
 const welcomePanel = document.getElementById("welcomePanel");
 const composer = document.getElementById("composer");
+const profilePanel = document.getElementById("profilePanel");
+
 const logoutBtn = document.getElementById("logoutBtn");
+const profileBtn = document.getElementById("profileBtn");
 const publishBtn = document.getElementById("publishBtn");
 const postText = document.getElementById("postText");
 const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
 
+const profileName = document.getElementById("profileName");
+const avatarFile = document.getElementById("avatarFile");
+const avatarPreview = document.getElementById("avatarPreview");
+const saveProfileBtn = document.getElementById("saveProfileBtn");
+const cancelProfileBtn = document.getElementById("cancelProfileBtn");
+const profileMessage = document.getElementById("profileMessage");
+
 let currentUser = null;
 let supabaseClient = null;
+let currentAvatarUrl = null;
+let previewObjectUrl = null;
 
 function showAuthMessage(message) {
   authMessage.textContent = message;
@@ -375,16 +489,48 @@ function updateInterface() {
   welcomePanel.hidden = loggedIn;
   composer.hidden = !loggedIn;
   logoutBtn.hidden = !loggedIn;
+  profileBtn.hidden = !loggedIn;
 
-  if (loggedIn) {
-    feedMessage.textContent = "Welcome! Loading community posts...";
-  } else {
+  if (!loggedIn) {
+    profilePanel.hidden = true;
     feedMessage.textContent =
       "Please sign up or log in to view community posts.";
 
     feed.replaceChildren();
     status.textContent = "";
+    profileMessage.textContent = "";
+    currentAvatarUrl = null;
+    profileName.value = "";
+    avatarFile.value = "";
+    avatarPreview.removeAttribute("src");
+    avatarPreview.hidden = true;
+  } else {
+    feedMessage.textContent = "Welcome! Loading community posts...";
   }
+}
+
+/* Safely show a profile picture or a letter placeholder */
+function createAvatar(url, name) {
+  if (url) {
+    const image = document.createElement("img");
+    image.className = "avatar";
+    image.alt = name + "'s profile picture";
+    image.src = url;
+
+    image.addEventListener("error", () => {
+      const placeholder = document.createElement("div");
+      placeholder.className = "avatar-placeholder";
+      placeholder.textContent = (name || "F").charAt(0).toUpperCase();
+      image.replaceWith(placeholder);
+    }, { once: true });
+
+    return image;
+  }
+
+  const placeholder = document.createElement("div");
+  placeholder.className = "avatar-placeholder";
+  placeholder.textContent = (name || "F").charAt(0).toUpperCase();
+  return placeholder;
 }
 
 /* Display an individual community post */
@@ -395,8 +541,17 @@ function addPostCard(post) {
   const heading = document.createElement("div");
   heading.className = "post-head";
 
+  const authorInfo = document.createElement("div");
+  authorInfo.className = "author-info";
+
+  const authorName = post.author_name || "Freedom member";
+  const avatar = createAvatar(post.avatar_url, authorName);
+
   const author = document.createElement("strong");
-  author.textContent = post.author_email || "Freedom member";
+  author.className = "author-name";
+  author.textContent = authorName;
+
+  authorInfo.append(avatar, author);
 
   const date = document.createElement("span");
   date.className = "muted";
@@ -411,13 +566,59 @@ function addPostCard(post) {
   content.className = "post";
   content.textContent = post.content || "";
 
-  heading.append(author, date);
+  heading.append(authorInfo, date);
   card.append(heading, content);
   feed.append(card);
 }
 
-  
-/* Load posts and display their profile names */
+/* Load the signed-in user's profile into the editor */
+async function loadProfile() {
+  if (!currentUser || !supabaseClient) return;
+
+  profileMessage.textContent = "Loading your profile...";
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .select("id,username,display_name,avatar_url")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (data) {
+      profileName.value =
+        data.display_name || data.username || "";
+
+      currentAvatarUrl = data.avatar_url || null;
+    } else {
+      profileName.value = "";
+      currentAvatarUrl = null;
+    }
+
+    avatarFile.value = "";
+
+    if (previewObjectUrl) {
+      URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = null;
+    }
+
+    if (currentAvatarUrl) {
+      avatarPreview.src = currentAvatarUrl;
+      avatarPreview.hidden = false;
+    } else {
+      avatarPreview.removeAttribute("src");
+      avatarPreview.hidden = true;
+    }
+
+    profileMessage.textContent = "";
+  } catch (error) {
+    profileMessage.textContent =
+      "Could not load your profile: " + friendlyError(error);
+  }
+}
+
+/* Load posts and their profile names and pictures */
 async function loadPosts() {
   if (!currentUser || !supabaseClient) return;
 
@@ -444,7 +645,7 @@ async function loadPosts() {
     const { data: profiles, error: profileError } =
       await supabaseClient
         .from("profiles")
-        .select("id,username,display_name")
+        .select("id,username,display_name,avatar_url")
         .in("id", userIds);
 
     if (profileError) throw profileError;
@@ -452,25 +653,253 @@ async function loadPosts() {
     const profileMap = new Map(
       (profiles || []).map(profile => [
         profile.id,
-        profile.display_name || profile.username || "Freedom member"
+        {
+          name:
+            profile.display_name ||
+            profile.username ||
+            "Freedom member",
+          avatar_url: profile.avatar_url || null
+        }
       ])
     );
 
     data.forEach(post => {
+      const profile = profileMap.get(post.user_id) || {
+        name: "Freedom member",
+        avatar_url: null
+      };
+
       addPostCard({
         ...post,
-        author_email: profileMap.get(post.user_id) || "Freedom member"
+        author_name: profile.name,
+        avatar_url: profile.avatar_url
       });
     });
 
     feedMessage.textContent =
       "Showing the latest community posts.";
-
   } catch (error) {
     feedMessage.textContent =
       "Could not load posts: " + friendlyError(error);
   }
 }
+
+/* Open the profile editor */
+profileBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+
+  profilePanel.hidden = false;
+  profileMessage.textContent = "";
+  await loadProfile();
+
+  profilePanel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
+/* Close the profile editor without saving */
+cancelProfileBtn.addEventListener("click", () => {
+  profilePanel.hidden = true;
+  profileMessage.textContent = "";
+  avatarFile.value = "";
+
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+  }
+
+  if (currentAvatarUrl) {
+    avatarPreview.src = currentAvatarUrl;
+    avatarPreview.hidden = false;
+  } else {
+    avatarPreview.removeAttribute("src");
+    avatarPreview.hidden = true;
+  }
+});
+
+/* Preview a selected profile picture */
+avatarFile.addEventListener("change", () => {
+  const file = avatarFile.files && avatarFile.files[0];
+
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+  }
+
+  if (!file) {
+    if (currentAvatarUrl) {
+      avatarPreview.src = currentAvatarUrl;
+      avatarPreview.hidden = false;
+    } else {
+      avatarPreview.removeAttribute("src");
+      avatarPreview.hidden = true;
+    }
+
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    profileMessage.textContent =
+      "Please choose a JPG, PNG, or WebP picture.";
+    avatarFile.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    profileMessage.textContent =
+      "Your picture is too large. Please choose a picture under 2 MB.";
+    avatarFile.value = "";
+    return;
+  }
+
+  profileMessage.textContent = "";
+  previewObjectUrl = URL.createObjectURL(file);
+  avatarPreview.src = previewObjectUrl;
+  avatarPreview.hidden = false;
+});
+
+/* Save the display name and optional profile picture */
+saveProfileBtn.addEventListener("click", async () => {
+  if (!currentUser || !supabaseClient) {
+    profileMessage.textContent = "Please log in first.";
+    return;
+  }
+
+  const displayName = profileName.value.trim();
+  const file = avatarFile.files && avatarFile.files[0];
+
+  if (!displayName) {
+    profileMessage.textContent =
+      "Please enter the display name you want people to see.";
+    profileName.focus();
+    return;
+  }
+
+  if (displayName.length > 40) {
+    profileMessage.textContent =
+      "Your display name must be 40 characters or fewer.";
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (file && !allowedTypes.includes(file.type)) {
+    profileMessage.textContent =
+      "Please choose a JPG, PNG, or WebP picture.";
+    return;
+  }
+
+  if (file && file.size > 2 * 1024 * 1024) {
+    profileMessage.textContent =
+      "Your picture must be 2 MB or smaller.";
+    return;
+  }
+
+  saveProfileBtn.disabled = true;
+  profileMessage.textContent = "Saving your profile...";
+
+  try {
+    let avatarUrl = currentAvatarUrl;
+
+    /* Upload a new picture if one was selected */
+    if (file) {
+      const safeExtension = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+      }[file.type];
+
+      const filePath =
+        currentUser.id + "/" +
+        Date.now() + "." + safeExtension;
+
+      const { error: uploadError } = await supabaseClient
+        .storage
+        .from("avatars")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabaseClient
+        .storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      avatarUrl = publicData.publicUrl;
+    }
+
+    /* Update the existing profile first */
+    const { data: updatedProfile, error: updateError } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+          display_name: displayName,
+          avatar_url: avatarUrl
+        })
+        .eq("id", currentUser.id)
+        .select("id")
+        .maybeSingle();
+
+    if (updateError) throw updateError;
+
+    /* Create a profile if this account has no profile row yet */
+    if (!updatedProfile) {
+      const fallbackUsername =
+        "member_" + currentUser.id.replace(/-/g, "").slice(0, 16);
+
+      const { error: insertError } = await supabaseClient
+        .from("profiles")
+        .insert({
+          id: currentUser.id,
+          username: fallbackUsername,
+          display_name: displayName,
+          avatar_url: avatarUrl
+        });
+
+      if (insertError) throw insertError;
+    }
+
+    currentAvatarUrl = avatarUrl;
+
+    if (previewObjectUrl) {
+      URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = null;
+    }
+
+    profileMessage.textContent = "Your profile was saved successfully!";
+
+    await loadPosts();
+
+    /* Refresh the preview using the saved public picture URL */
+    if (currentAvatarUrl) {
+      avatarPreview.src = currentAvatarUrl;
+      avatarPreview.hidden = false;
+    } else {
+      avatarPreview.removeAttribute("src");
+      avatarPreview.hidden = true;
+    }
+  } catch (error) {
+    profileMessage.textContent =
+      "Could not save your profile: " + friendlyError(error);
+  } finally {
+    saveProfileBtn.disabled = false;
+  }
+});
 
 /* Create a new account */
 signupBtn.addEventListener("click", async () => {
@@ -506,13 +935,13 @@ signupBtn.addEventListener("click", async () => {
       currentUser = data.user;
       updateInterface();
       showAuthMessage("Your account is ready!");
+      await loadProfile();
       await loadPosts();
     } else {
       showAuthMessage(
         "Your account request was received. Check your email and click the confirmation link before logging in."
       );
     }
-
   } catch (error) {
     showAuthMessage(friendlyError(error));
   } finally {
@@ -520,7 +949,7 @@ signupBtn.addEventListener("click", async () => {
   }
 });
 
-/* Log in and update the interface */
+/* Log in */
 loginBtn.addEventListener("click", async () => {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
@@ -546,8 +975,9 @@ loginBtn.addEventListener("click", async () => {
     updateInterface();
 
     status.textContent = "You are logged in successfully!";
-    await loadPosts();
 
+    await loadProfile();
+    await loadPosts();
   } catch (error) {
     showAuthMessage(friendlyError(error));
   } finally {
@@ -567,7 +997,6 @@ logoutBtn.addEventListener("click", async () => {
     currentUser = null;
     updateInterface();
     showAuthMessage("You have logged out.");
-
   } catch (error) {
     status.textContent = friendlyError(error);
   } finally {
@@ -575,7 +1004,7 @@ logoutBtn.addEventListener("click", async () => {
   }
 });
 
-  /* Publish a community post */
+/* Publish a community post */
 publishBtn.addEventListener("click", async () => {
   if (publishBtn.disabled) return;
 
@@ -584,16 +1013,14 @@ publishBtn.addEventListener("click", async () => {
     return;
   }
 
-  publishBtn.disabled = true;
-
-    const content = postText.value.trim();
+  const content = postText.value.trim();
 
   if (!content) {
     status.textContent = "Write something before publishing.";
-    publishBtn.disabled = false;
     return;
   }
 
+  publishBtn.disabled = true;
   status.textContent = "Publishing your post...";
 
   try {
@@ -609,7 +1036,6 @@ publishBtn.addEventListener("click", async () => {
     postText.value = "";
     status.textContent = "Your post was saved!";
     await loadPosts();
-
   } catch (error) {
     status.textContent =
       "Could not publish: " + friendlyError(error);
@@ -646,15 +1072,25 @@ async function initialize() {
   updateInterface();
 
   if (currentUser) {
+    await loadProfile();
     await loadPosts();
   }
 
-  /* Keep the interface in sync when login status changes */
+  /* Keep the interface updated when login status changes */
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session ? session.user : null;
+    updateInterface();
 
-supabaseClient.auth.onAuthStateChange((_event, session) => {
-  currentUser = session ? session.user : null;
-  updateInterface();
-});
+    /* Run follow-up requests after the auth callback finishes */
+    if (currentUser) {
+      setTimeout(() => {
+        if (currentUser) {
+          loadProfile();
+          loadPosts();
+        }
+      }, 0);
+    }
+  });
 }
 
 initialize();
