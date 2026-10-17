@@ -543,21 +543,25 @@ logoutBtn.addEventListener("click", async () => {
   }
 });
 
-/* Publish a community post */
+  /* Publish a community post */
 publishBtn.addEventListener("click", async () => {
+  if (publishBtn.disabled) return;
+
   if (!currentUser) {
     status.textContent = "Please log in before publishing.";
     return;
   }
 
-  const content = postText.value.trim();
+  publishBtn.disabled = true;
+
+    const content = postText.value.trim();
 
   if (!content) {
     status.textContent = "Write something before publishing.";
+    publishBtn.disabled = false;
     return;
   }
 
-  publishBtn.disabled = true;
   status.textContent = "Publishing your post...";
 
   try {
