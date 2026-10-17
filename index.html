@@ -407,7 +407,8 @@ function addPostCard(post) {
   feed.append(card);
 }
 
-/* Load posts from the Supabase database */
+  
+/* Load posts and display their profile names */
 async function loadPosts() {
   if (!currentUser || !supabaseClient) return;
 
@@ -429,7 +430,29 @@ async function loadPosts() {
       return;
     }
 
-    data.forEach(addPostCard);
+    const userIds = [...new Set(data.map(post => post.user_id))];
+
+    const { data: profiles, error: profileError } =
+      await supabaseClient
+        .from("profiles")
+        .select("id,username,display_name")
+        .in("id", userIds);
+
+    if (profileError) throw profileError;
+
+    const profileMap = new Map(
+      (profiles || []).map(profile => [
+        profile.id,
+        profile.display_name || profile.username || "Freedom member"
+      ])
+    );
+
+    data.forEach(post => {
+      addPostCard({
+        ...post,
+        author_email: profileMap.get(post.user_id) || "Freedom member"
+      });
+    });
 
     feedMessage.textContent =
       "Showing the latest community posts.";
