@@ -160,12 +160,15 @@ label {
   gap: 18px;
 }
 
+  
 /* Make hidden sections stay hidden */
 #authPanel[hidden],
+#welcomePanel[hidden],
 #composer[hidden],
 #logoutBtn[hidden] {
   display: none !important;
 }
+
 
 #authMessage, #status {
   overflow-wrap: anywhere;
@@ -224,11 +227,15 @@ footer {
   </aside>
 
   <section>
-    <span class="pill">WELCOME TO FREEDOM</span>
-    <h1>Connect your world.</h1>
-    <p class="muted">
-      Create an account, share your thoughts, and connect with your community.
-    </p>
+    
+<div id="welcomePanel">
+  <span class="pill">WELCOME TO FREEDOM</span>
+  <h1>Connect your world.</h1>
+  <p class="muted">
+    Create an account, share your thoughts, and connect with your community.
+  </p>
+</div>
+
 
     <div class="card" id="authPanel">
       <div>
@@ -331,6 +338,7 @@ const status = document.getElementById("status");
 const feed = document.getElementById("feed");
 const feedMessage = document.getElementById("feedMessage");
 const authPanel = document.getElementById("authPanel");
+const welcomePanel = document.getElementById("welcomePanel");
 const composer = document.getElementById("composer");
 const logoutBtn = document.getElementById("logoutBtn");
 const publishBtn = document.getElementById("publishBtn");
@@ -364,6 +372,7 @@ function updateInterface() {
   const loggedIn = Boolean(currentUser);
 
   authPanel.hidden = loggedIn;
+  welcomePanel.hidden = loggedIn;
   composer.hidden = !loggedIn;
   logoutBtn.hidden = !loggedIn;
 
