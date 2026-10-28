@@ -1076,21 +1076,13 @@ async function initialize() {
     await loadPosts();
   }
 
+  
   /* Keep the interface updated when login status changes */
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     currentUser = session ? session.user : null;
     updateInterface();
-
-    /* Run follow-up requests after the auth callback finishes */
-    if (currentUser) {
-      setTimeout(() => {
-        if (currentUser) {
-          loadProfile();
-          loadPosts();
-        }
-      }, 0);
-    }
   });
+
 }
 
 initialize();
