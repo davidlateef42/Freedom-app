@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,249 +9,50 @@
 <title>Freedom — Connect Your World</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f3f6fb;
-  color: #172033;
-}
-
-header {
-  background: #fff;
-  border-bottom: 1px solid #e4e9f2;
-  padding: 16px 5%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.logo {
-  font-size: 26px;
-  font-weight: 800;
-  color: #2563eb;
-}
-
-.logo span {
-  color: #172033;
-}
-
-button {
-  cursor: pointer;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px 16px;
-  font-weight: 700;
-}
-
-button:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
-
-.primary {
-  background: #2563eb;
-  color: white;
-}
-
-.secondary {
-  background: #eaf2ff;
-  color: #2455b4;
-}
-
-main {
-  max-width: 1050px;
-  margin: 28px auto;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 22px;
-}
-
-aside, .card {
-  background: white;
-  border: 1px solid #e5eaf2;
-  border-radius: 16px;
-  padding: 18px;
-}
-
-aside p {
-  padding: 10px 8px;
-  border-radius: 8px;
-  color: #46546a;
-}
-
-h1 {
-  font-size: 28px;
-  margin: 12px 0 8px;
-}
-
-h3 {
-  margin-top: 0;
-}
-
-.muted {
-  color: #6c778b;
-  line-height: 1.5;
-}
-
-.card {
-  margin-top: 18px;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #dce3ee;
-  border-radius: 10px;
-  font: inherit;
-  margin: 6px 0 12px;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.pill {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 30px;
-  background: #eaf2ff;
-  color: #2455b4;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.post {
-  line-height: 1.6;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  margin-bottom: 0;
-}
-
-.post-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.author-name {
-  overflow-wrap: anywhere;
-}
-
-.avatar {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #eaf2ff;
-  border: 1px solid #dce3ee;
-}
-
-.avatar-placeholder {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #eaf2ff;
-  color: #2455b4;
-  font-weight: 800;
-  font-size: 18px;
-}
-
-.profile-preview {
-  display: block;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #dce3ee;
-  margin: 10px 0;
-}
-
-#authPanel {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-#authPanel[hidden],
-#welcomePanel[hidden],
-#composer[hidden],
-#profilePanel[hidden],
-#logoutBtn[hidden],
-#profileBtn[hidden] {
-  display: none !important;
-}
-
-#authMessage,
-#status,
-#profileMessage {
-  overflow-wrap: anywhere;
-}
-
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #778196;
-  font-size: 13px;
-}
-
-@media (max-width: 650px) {
-  main {
-    grid-template-columns: 1fr;
-    margin-top: 16px;
-  }
-
-  aside {
-    display: none;
-  }
-
-  header {
-    padding: 14px 16px;
-  }
-
-  h1 {
-    font-size: 23px;
-  }
-
-  #authPanel {
-    grid-template-columns: 1fr;
-  }
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
+header{background:#fff;border-bottom:1px solid #e4e9f2;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-size:26px;font-weight:800;color:#2563eb}
+.logo span{color:#172033}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font-weight:700}
+button:disabled{opacity:.6;cursor:not-allowed}
+.primary{background:#2563eb;color:white}
+.secondary{background:#eaf2ff;color:#2455b4}
+main{max-width:1050px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}
+aside,.card{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:18px}
+aside p{padding:10px 8px;border-radius:8px;color:#46546a}
+h1{font-size:28px;margin:12px 0 8px}
+h3{margin-top:0}
+.muted{color:#6c778b;line-height:1.5}
+.card{margin-top:18px}
+input,textarea{width:100%;padding:13px;border:1px solid #dce3ee;border-radius:10px;font:inherit;margin:6px 0 12px}
+textarea{min-height:100px;resize:vertical}
+label{display:block;font-size:14px;font-weight:700;margin-top:8px}
+.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;padding:6px 10px;border-radius:30px;background:#eaf2ff;color:#2455b4;font-size:12px;font-weight:bold}
+.post{line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;margin-bottom:0}
+.post-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.author-info{display:flex;align-items:center;gap:10px;min-width:0}
+.author-name{overflow-wrap:anywhere}
+.avatar{width:44px;height:44px;flex-shrink:0;border-radius:50%;object-fit:cover;background:#eaf2ff;border:1px solid #dce3ee}
+.avatar-placeholder{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#eaf2ff;color:#2455b4;font-weight:800;font-size:18px}
+.profile-preview{display:block;width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #dce3ee;margin:10px 0}
+#authPanel{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+[hidden]{display:none!important}
+#authMessage,#status,#profileMessage,#friendsMessage{overflow-wrap:anywhere}
+.member{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf2;flex-wrap:wrap}
+.member-info{flex:1;min-width:120px}
+.member-info strong{display:block;overflow-wrap:anywhere}
+.member-info small{color:#6c778b}
+.member-actions{display:flex;gap:6px;flex-wrap:wrap}
+.member-actions button{padding:9px 11px}
+footer{text-align:center;padding:30px;color:#778196;font-size:13px}
+@media(max-width:650px){
+ main{grid-template-columns:1fr;margin-top:16px}
+ aside{display:none}
+ header{padding:14px 16px}
+ h1{font-size:23px}
+ #authPanel{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -259,14 +61,10 @@ footer {
 <header>
   <div class="logo">Freedom<span>.</span></div>
   <span class="pill">YOUR COMMUNITY STARTS HERE</span>
-
   <div class="actions">
-    <button id="profileBtn" class="secondary" hidden>
-      Edit profile
-    </button>
-    <button id="logoutBtn" class="secondary" hidden>
-      Log out
-    </button>
+    <button id="friendsNavBtn" class="secondary" hidden>👥 Friends</button>
+    <button id="profileBtn" class="secondary" hidden>Edit profile</button>
+    <button id="logoutBtn" class="secondary" hidden>Log out</button>
   </div>
 </header>
 
@@ -274,7 +72,7 @@ footer {
   <aside>
     <h3>Your space</h3>
     <p>🏠 Home feed</p>
-    <p>👥 Friends — coming soon</p>
+    <p>👥 Friends</p>
     <p>💬 Messages — coming soon</p>
     <p>📞 Voice calls — coming soon</p>
     <p>🎥 Video calls — coming soon</p>
@@ -284,221 +82,173 @@ footer {
   </aside>
 
   <section>
-
     <div id="welcomePanel">
       <span class="pill">WELCOME TO FREEDOM</span>
       <h1>Connect your world.</h1>
-      <p class="muted">
-        Create an account, share your thoughts, and connect with your community.
-      </p>
+      <p class="muted">Create an account, share your thoughts, and connect with your community.</p>
     </div>
 
     <div class="card" id="authPanel">
       <div>
         <h3>Create your account</h3>
-
         <label for="signupEmail">Email address</label>
-        <input
-          id="signupEmail"
-          type="email"
-          autocomplete="email"
-          placeholder="you@example.com"
-        >
-
+        <input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com">
         <label for="signupPassword">Password</label>
-        <input
-          id="signupPassword"
-          type="password"
-          autocomplete="new-password"
-          placeholder="At least 6 characters"
-        >
-
+        <input id="signupPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters">
         <button class="primary" id="signupBtn">Sign up</button>
       </div>
-
       <div>
         <h3>Welcome back</h3>
-
         <label for="loginEmail">Email address</label>
-        <input
-          id="loginEmail"
-          type="email"
-          autocomplete="email"
-          placeholder="you@example.com"
-        >
-
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com">
         <label for="loginPassword">Password</label>
-        <input
-          id="loginPassword"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Your password"
-        >
-
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
         <button class="primary" id="loginBtn">Log in</button>
       </div>
-
-      <p
-        id="authMessage"
-        class="muted"
-        aria-live="polite"
-        style="grid-column:1/-1"
-      ></p>
+      <p id="authMessage" class="muted" aria-live="polite" style="grid-column:1/-1"></p>
     </div>
 
     <div class="card" id="composer" hidden>
       <h3>Create a post</h3>
       <p class="muted">What's on your mind?</p>
-
-      <textarea
-        id="postText"
-        maxlength="1000"
-        placeholder="Share something with your community..."
-      ></textarea>
-
+      <textarea id="postText" maxlength="1000" placeholder="Share something with your community..."></textarea>
       <div class="actions">
         <span class="muted">Share a positive moment 💙</span>
         <button class="primary" id="publishBtn">Publish post</button>
       </div>
-
       <p id="status" class="muted" aria-live="polite"></p>
     </div>
 
     <div class="card" id="profilePanel" hidden>
       <h3>Edit your profile</h3>
-      <p class="muted">
-        Choose the name and picture your community will see.
-      </p>
-
+      <p class="muted">Choose the name and picture your community will see.</p>
       <label for="profileName">Display name</label>
-      <input
-        id="profileName"
-        type="text"
-        maxlength="40"
-        placeholder="Enter your display name"
-      >
-
+      <input id="profileName" type="text" maxlength="40" placeholder="Enter your display name">
       <label for="avatarFile">Profile picture</label>
-      <input
-        id="avatarFile"
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-      >
-
-      <p class="muted">
-        Use a JPG, PNG, or WebP picture. Maximum size: 2 MB.
-      </p>
-
-      <img
-        id="avatarPreview"
-        class="profile-preview"
-        alt="Profile picture preview"
-        hidden
-      >
-
+      <input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp">
+      <p class="muted">Use a JPG, PNG, or WebP picture. Maximum size: 2 MB.</p>
+      <img id="avatarPreview" class="profile-preview" alt="Profile picture preview" hidden>
       <div class="actions">
-        <button class="primary" id="saveProfileBtn">
-          Save profile
-        </button>
-        <button class="secondary" id="cancelProfileBtn">
-          Cancel
-        </button>
+        <button class="primary" id="saveProfileBtn">Save profile</button>
+        <button class="secondary" id="cancelProfileBtn">Cancel</button>
       </div>
-
       <p id="profileMessage" class="muted" aria-live="polite"></p>
     </div>
 
-    <div class="card">
-      <h3>Community feed</h3>
-      <p id="feedMessage" class="muted">
-        Sign in to view community posts.
-      </p>
+    <div class="card" id="friendsPanel" hidden>
+      <h3>👥 Friends</h3>
+      <p class="muted">Find members and connect with your community.</p>
+      <label for="friendSearch">Find members</label>
+      <input id="friendSearch" type="text" maxlength="40" placeholder="Search by username or display name">
+      <button class="primary" id="searchFriendsBtn">Search members</button>
+      <div id="friendSearchResults"></div>
+      <hr>
+      <h3>Incoming friend requests</h3>
+      <div id="friendRequestsList"></div>
+      <hr>
+      <h3>My friends</h3>
+      <div id="myFriendsList"></div>
+      <p id="friendsMessage" class="muted" aria-live="polite"></p>
+      <button class="secondary" id="closeFriendsBtn">Back to feed</button>
     </div>
 
+    <div class="card" id="feedPanel">
+      <h3>Community feed</h3>
+      <p id="feedMessage" class="muted">Sign in to view community posts.</p>
+    </div>
     <div id="feed"></div>
-
   </section>
 </main>
 
 <footer>Freedom App © 2026 · Built to bring people closer.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 "use strict";
 
-/* Supabase project connection */
-const SUPABASE_URL =
-  "https://agyfqvpiacnncvnptprh.supabase.co";
+const SUPABASE_URL = "https://agyfqvpiacnncvnptprh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dvPr5WqSpw6BQKJzqOVVSg_pUAA4c2b";
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_dvPr5WqSpw6BQKJzqOVVSg_pUAA4c2b";
+const $ = id => document.getElementById(id);
 
-const authMessage = document.getElementById("authMessage");
-const status = document.getElementById("status");
-const feed = document.getElementById("feed");
-const feedMessage = document.getElementById("feedMessage");
-
-const authPanel = document.getElementById("authPanel");
-const welcomePanel = document.getElementById("welcomePanel");
-const composer = document.getElementById("composer");
-const profilePanel = document.getElementById("profilePanel");
-
-const logoutBtn = document.getElementById("logoutBtn");
-const profileBtn = document.getElementById("profileBtn");
-const publishBtn = document.getElementById("publishBtn");
-const postText = document.getElementById("postText");
-const signupBtn = document.getElementById("signupBtn");
-const loginBtn = document.getElementById("loginBtn");
-
-const profileName = document.getElementById("profileName");
-const avatarFile = document.getElementById("avatarFile");
-const avatarPreview = document.getElementById("avatarPreview");
-const saveProfileBtn = document.getElementById("saveProfileBtn");
-const cancelProfileBtn = document.getElementById("cancelProfileBtn");
-const profileMessage = document.getElementById("profileMessage");
+const authMessage = $("authMessage");
+const status = $("status");
+const feed = $("feed");
+const feedMessage = $("feedMessage");
+const authPanel = $("authPanel");
+const welcomePanel = $("welcomePanel");
+const composer = $("composer");
+const profilePanel = $("profilePanel");
+const feedPanel = $("feedPanel");
+const friendsPanel = $("friendsPanel");
+const logoutBtn = $("logoutBtn");
+const profileBtn = $("profileBtn");
+const friendsNavBtn = $("friendsNavBtn");
+const publishBtn = $("publishBtn");
+const postText = $("postText");
+const signupBtn = $("signupBtn");
+const loginBtn = $("loginBtn");
+const profileName = $("profileName");
+const avatarFile = $("avatarFile");
+const avatarPreview = $("avatarPreview");
+const saveProfileBtn = $("saveProfileBtn");
+const cancelProfileBtn = $("cancelProfileBtn");
+const profileMessage = $("profileMessage");
+const friendSearch = $("friendSearch");
+const searchFriendsBtn = $("searchFriendsBtn");
+const friendSearchResults = $("friendSearchResults");
+const friendRequestsList = $("friendRequestsList");
+const myFriendsList = $("myFriendsList");
+const friendsMessage = $("friendsMessage");
 
 let currentUser = null;
 let supabaseClient = null;
 let currentAvatarUrl = null;
 let previewObjectUrl = null;
 
+function friendlyError(error) {
+  if (!error) return "Something went wrong. Please try again.";
+  const message = error.message || "Something went wrong. Please try again.";
+  if (message.toLowerCase().includes("invalid login")) {
+    return "Email or password is incorrect. Please check and try again.";
+  }
+  if (message.toLowerCase().includes("duplicate key")) {
+    return "This action has already been recorded.";
+  }
+  return message;
+}
+
 function showAuthMessage(message) {
   authMessage.textContent = message;
 }
 
-function friendlyError(error) {
-  if (!error) {
-    return "Something went wrong. Please try again.";
-  }
-
-  const message = error.message || "";
-
-  if (message.toLowerCase().includes("invalid login")) {
-    return "Email or password is incorrect. Please check and try again.";
-  }
-
-  return message || "Something went wrong. Please try again.";
+function showHome() {
+  friendsPanel.hidden = true;
+  profilePanel.hidden = true;
+  feedPanel.hidden = !currentUser;
+  feed.hidden = !currentUser;
+  composer.hidden = !currentUser;
 }
 
-/* Show the correct sections based on login status */
 function updateInterface() {
   const loggedIn = Boolean(currentUser);
-
   authPanel.hidden = loggedIn;
   welcomePanel.hidden = loggedIn;
   composer.hidden = !loggedIn;
   logoutBtn.hidden = !loggedIn;
   profileBtn.hidden = !loggedIn;
+  friendsNavBtn.hidden = !loggedIn;
 
   if (!loggedIn) {
     profilePanel.hidden = true;
-    feedMessage.textContent =
-      "Please sign up or log in to view community posts.";
-
+    friendsPanel.hidden = true;
+    feedPanel.hidden = false;
+    feed.hidden = false;
+    feedMessage.textContent = "Please sign up or log in to view community posts.";
     feed.replaceChildren();
     status.textContent = "";
     profileMessage.textContent = "";
+    friendsMessage.textContent = "";
     currentAvatarUrl = null;
     profileName.value = "";
     avatarFile.value = "";
@@ -509,93 +259,65 @@ function updateInterface() {
   }
 }
 
-/* Safely show a profile picture or a letter placeholder */
 function createAvatar(url, name) {
   if (url) {
     const image = document.createElement("img");
     image.className = "avatar";
-    image.alt = name + "'s profile picture";
+    image.alt = (name || "Member") + "'s profile picture";
     image.src = url;
-
     image.addEventListener("error", () => {
-      const placeholder = document.createElement("div");
-      placeholder.className = "avatar-placeholder";
-      placeholder.textContent = (name || "F").charAt(0).toUpperCase();
-      image.replaceWith(placeholder);
+      const fallback = document.createElement("div");
+      fallback.className = "avatar-placeholder";
+      fallback.textContent = (name || "F").charAt(0).toUpperCase();
+      image.replaceWith(fallback);
     }, { once: true });
-
     return image;
   }
-
   const placeholder = document.createElement("div");
   placeholder.className = "avatar-placeholder";
   placeholder.textContent = (name || "F").charAt(0).toUpperCase();
   return placeholder;
 }
 
-/* Display an individual community post */
 function addPostCard(post) {
   const card = document.createElement("article");
   card.className = "card";
-
   const heading = document.createElement("div");
   heading.className = "post-head";
-
   const authorInfo = document.createElement("div");
   authorInfo.className = "author-info";
-
   const authorName = post.author_name || "Freedom member";
-  const avatar = createAvatar(post.avatar_url, authorName);
-
   const author = document.createElement("strong");
   author.className = "author-name";
   author.textContent = authorName;
-
-  authorInfo.append(avatar, author);
+  authorInfo.append(createAvatar(post.avatar_url, authorName), author);
 
   const date = document.createElement("span");
   date.className = "muted";
-
   const parsedDate = new Date(post.created_at);
-
-  date.textContent = Number.isNaN(parsedDate.getTime())
-    ? ""
-    : parsedDate.toLocaleString();
+  date.textContent = Number.isNaN(parsedDate.getTime()) ? "" : parsedDate.toLocaleString();
 
   const content = document.createElement("p");
   content.className = "post";
   content.textContent = post.content || "";
-
   heading.append(authorInfo, date);
   card.append(heading, content);
   feed.append(card);
 }
 
-/* Load the signed-in user's profile into the editor */
 async function loadProfile() {
   if (!currentUser || !supabaseClient) return;
-
   profileMessage.textContent = "Loading your profile...";
-
   try {
     const { data, error } = await supabaseClient
       .from("profiles")
       .select("id,username,display_name,avatar_url")
       .eq("id", currentUser.id)
       .maybeSingle();
-
     if (error) throw error;
 
-    if (data) {
-      profileName.value =
-        data.display_name || data.username || "";
-
-      currentAvatarUrl = data.avatar_url || null;
-    } else {
-      profileName.value = "";
-      currentAvatarUrl = null;
-    }
-
+    profileName.value = data ? (data.display_name || data.username || "") : "";
+    currentAvatarUrl = data?.avatar_url || null;
     avatarFile.value = "";
 
     if (previewObjectUrl) {
@@ -610,105 +332,335 @@ async function loadProfile() {
       avatarPreview.removeAttribute("src");
       avatarPreview.hidden = true;
     }
-
     profileMessage.textContent = "";
   } catch (error) {
-    profileMessage.textContent =
-      "Could not load your profile: " + friendlyError(error);
+    profileMessage.textContent = "Could not load your profile: " + friendlyError(error);
   }
 }
 
-/* Load posts and their profile names and pictures */
 async function loadPosts() {
   if (!currentUser || !supabaseClient) return;
-
   feed.replaceChildren();
   feedMessage.textContent = "Loading posts...";
-
   try {
     const { data, error } = await supabaseClient
       .from("posts")
       .select("id,user_id,content,created_at")
       .order("created_at", { ascending: false })
       .limit(50);
-
     if (error) throw error;
 
     if (!data || data.length === 0) {
-      feedMessage.textContent =
-        "No posts yet. Be the first to share something!";
+      feedMessage.textContent = "No posts yet. Be the first to share something!";
       return;
     }
 
     const userIds = [...new Set(data.map(post => post.user_id))];
-
-    const { data: profiles, error: profileError } =
-      await supabaseClient
-        .from("profiles")
-        .select("id,username,display_name,avatar_url")
-        .in("id", userIds);
-
+    const { data: profiles, error: profileError } = await supabaseClient
+      .from("profiles")
+      .select("id,username,display_name,avatar_url")
+      .in("id", userIds);
     if (profileError) throw profileError;
 
-    const profileMap = new Map(
-      (profiles || []).map(profile => [
-        profile.id,
-        {
-          name:
-            profile.display_name ||
-            profile.username ||
-            "Freedom member",
-          avatar_url: profile.avatar_url || null
-        }
-      ])
-    );
+    const profileMap = new Map((profiles || []).map(profile => [
+      profile.id,
+      {
+        name: profile.display_name || profile.username || "Freedom member",
+        avatar_url: profile.avatar_url || null
+      }
+    ]));
 
     data.forEach(post => {
-      const profile = profileMap.get(post.user_id) || {
-        name: "Freedom member",
-        avatar_url: null
-      };
-
+      const profile = profileMap.get(post.user_id) || {};
       addPostCard({
         ...post,
-        author_name: profile.name,
-        avatar_url: profile.avatar_url
+        author_name: profile.name || "Freedom member",
+        avatar_url: profile.avatar_url || null
       });
     });
-
-    feedMessage.textContent =
-      "Showing the latest community posts.";
+    feedMessage.textContent = "Showing the latest community posts.";
   } catch (error) {
-    feedMessage.textContent =
-      "Could not load posts: " + friendlyError(error);
+    feedMessage.textContent = "Could not load posts: " + friendlyError(error);
   }
 }
 
-/* Open the profile editor */
-profileBtn.addEventListener("click", async () => {
-  if (!currentUser) return;
+function addMemberRow(container, profile, actions = []) {
+  const row = document.createElement("div");
+  row.className = "member";
+  row.append(createAvatar(profile.avatar_url, profile.display_name || profile.username));
 
-  profilePanel.hidden = false;
-  profileMessage.textContent = "";
-  await loadProfile();
+  const info = document.createElement("div");
+  info.className = "member-info";
+  const name = document.createElement("strong");
+  name.textContent = profile.display_name || profile.username || "Freedom member";
+  const username = document.createElement("small");
+  username.textContent = profile.username ? "@" + profile.username : "Freedom member";
+  info.append(name, username);
+  row.append(info);
 
-  profilePanel.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+  if (actions.length) {
+    const actionBox = document.createElement("div");
+    actionBox.className = "member-actions";
+    actions.forEach(action => {
+      const button = document.createElement("button");
+      button.className = action.primary ? "primary" : "secondary";
+      button.textContent = action.label;
+      button.disabled = Boolean(action.disabled);
+      button.addEventListener("click", action.onClick);
+      actionBox.append(button);
+    });
+    row.append(actionBox);
+  }
+  container.append(row);
+}
+
+async function getProfilesByIds(ids) {
+  const uniqueIds = [...new Set(ids)].filter(Boolean);
+  if (!uniqueIds.length) return [];
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("id,username,display_name,avatar_url")
+    .in("id", uniqueIds);
+  if (error) throw error;
+  return data || [];
+}
+
+async function loadFriendRequests() {
+  friendRequestsList.replaceChildren();
+  const { data: requests, error } = await supabaseClient
+    .from("friend_requests")
+    .select("id,sender_id,receiver_id,status,created_at")
+    .eq("receiver_id", currentUser.id)
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  if (!requests || requests.length === 0) {
+    friendRequestsList.textContent = "You have no incoming friend requests.";
+    return;
+  }
+
+  const profiles = await getProfilesByIds(requests.map(request => request.sender_id));
+  const profileMap = new Map(profiles.map(profile => [profile.id, profile]));
+
+  requests.forEach(request => {
+    const profile = profileMap.get(request.sender_id);
+    if (!profile) return;
+    addMemberRow(friendRequestsList, profile, [
+      {
+        label: "Accept",
+        primary: true,
+        onClick: () => respondToRequest(request.id, "accepted")
+      },
+      {
+        label: "Reject",
+        onClick: () => respondToRequest(request.id, "rejected")
+      }
+    ]);
   });
+}
+
+async function loadMyFriends() {
+  myFriendsList.replaceChildren();
+  const { data: requests, error } = await supabaseClient
+    .from("friend_requests")
+    .select("sender_id,receiver_id,status")
+    .eq("status", "accepted")
+    .or("sender_id.eq." + currentUser.id + ",receiver_id.eq." + currentUser.id);
+  if (error) throw error;
+
+  const friendIds = (requests || []).map(request =>
+    request.sender_id === currentUser.id ? request.receiver_id : request.sender_id
+  );
+
+  if (!friendIds.length) {
+    myFriendsList.textContent = "You haven't added any friends yet.";
+    return;
+  }
+
+  const profiles = await getProfilesByIds(friendIds);
+  if (!profiles.length) {
+    myFriendsList.textContent = "Your friends could not be displayed.";
+    return;
+  }
+
+  profiles.forEach(profile => addMemberRow(myFriendsList, profile));
+}
+
+async function refreshFriends() {
+  if (!currentUser || !supabaseClient) return;
+  friendsMessage.textContent = "Loading your friends...";
+  try {
+    await Promise.all([loadFriendRequests(), loadMyFriends()]);
+    friendsMessage.textContent = "";
+  } catch (error) {
+    friendsMessage.textContent = "Could not load friends: " + friendlyError(error);
+  }
+}
+
+async function searchMembers() {
+  if (!currentUser) return;
+  const term = friendSearch.value.trim();
+  friendSearchResults.replaceChildren();
+
+  if (term.length < 2) {
+    friendsMessage.textContent = "Enter at least 2 characters to search.";
+    return;
+  }
+
+  searchFriendsBtn.disabled = true;
+  friendsMessage.textContent = "Searching members...";
+  try {
+    const pattern = "%" + term.replace(/[%_,]/g, "") + "%";
+    const { data: profiles, error } = await supabaseClient
+      .from("profiles")
+      .select("id,username,display_name,avatar_url")
+      .neq("id", currentUser.id)
+      .or("username.ilike." + pattern + ",display_name.ilike." + pattern)
+      .limit(20);
+    if (error) throw error;
+
+    if (!profiles || profiles.length === 0) {
+      friendSearchResults.textContent = "No members found. Try another name.";
+      friendsMessage.textContent = "";
+      return;
+    }
+
+    const { data: existing, error: requestError } = await supabaseClient
+      .from("friend_requests")
+      .select("sender_id,receiver_id,status")
+      .or("sender_id.eq." + currentUser.id + ",receiver_id.eq." + currentUser.id);
+    if (requestError) throw requestError;
+
+    profiles.forEach(profile => {
+      const relationship = (existing || []).find(request =>
+        (request.sender_id === currentUser.id && request.receiver_id === profile.id) ||
+        (request.sender_id === profile.id && request.receiver_id === currentUser.id)
+      );
+
+      let actions = [];
+      if (!relationship) {
+        actions = [{
+          label: "Add friend",
+          primary: true,
+          onClick: () => sendFriendRequest(profile.id)
+        }];
+      } else if (relationship.status === "accepted") {
+        actions = [{ label: "Already friends", disabled: true }];
+      } else if (relationship.status === "pending" && relationship.sender_id === currentUser.id) {
+        actions = [{ label: "Request sent", disabled: true }];
+      } else if (relationship.status === "pending") {
+        actions = [{
+          label: "View requests",
+          onClick: async () => {
+            await refreshFriends();
+            friendRequestsList.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }];
+      } else {
+        actions = [{
+          label: "Add friend",
+          primary: true,
+          onClick: () => sendFriendRequest(profile.id)
+        }];
+      }
+      addMemberRow(friendSearchResults, profile, actions);
+    });
+    friendsMessage.textContent = "Search complete.";
+  } catch (error) {
+    friendsMessage.textContent = "Search failed: " + friendlyError(error);
+  } finally {
+    searchFriendsBtn.disabled = false;
+  }
+}
+
+async function sendFriendRequest(receiverId) {
+  if (!currentUser || receiverId === currentUser.id) return;
+  friendsMessage.textContent = "Sending friend request...";
+  try {
+    const { error } = await supabaseClient
+      .from("friend_requests")
+      .insert({
+        sender_id: currentUser.id,
+        receiver_id: receiverId,
+        status: "pending"
+      });
+    if (error) throw error;
+    friendsMessage.textContent = "Friend request sent!";
+    await searchMembers();
+    await refreshFriends();
+  } catch (error) {
+    friendsMessage.textContent = "Could not send request: " + friendlyError(error);
+  }
+}
+
+async function respondToRequest(requestId, newStatus) {
+  friendsMessage.textContent = "Updating friend request...";
+  try {
+    const { data, error } = await supabaseClient
+      .from("friend_requests")
+      .update({ status: newStatus })
+      .eq("id", requestId)
+      .eq("receiver_id", currentUser.id)
+      .eq("status", "pending")
+      .select("id");
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      throw new Error("Request could not be updated. Refresh and try again.");
+    }
+    friendsMessage.textContent =
+      newStatus === "accepted" ? "Friend request accepted!" : "Friend request rejected.";
+    await refreshFriends();
+    if (friendSearch.value.trim().length >= 2) await searchMembers();
+  } catch (error) {
+    friendsMessage.textContent = "Could not update request: " + friendlyError(error);
+  }
+}
+
+/* Open and close panels */
+friendsNavBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+  profilePanel.hidden = true;
+  composer.hidden = true;
+  feedPanel.hidden = true;
+  feed.hidden = true;
+  friendsPanel.hidden = false;
+  await refreshFriends();
+  friendsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-/* Close the profile editor without saving */
+$("closeFriendsBtn").addEventListener("click", () => {
+  showHome();
+  feedPanel.hidden = false;
+  feed.hidden = false;
+  composer.hidden = false;
+  feedPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+searchFriendsBtn.addEventListener("click", searchMembers);
+friendSearch.addEventListener("keydown", event => {
+  if (event.key === "Enter") searchMembers();
+});
+
+profileBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+  friendsPanel.hidden = true;
+  feedPanel.hidden = true;
+  feed.hidden = true;
+  composer.hidden = true;
+  profilePanel.hidden = false;
+  await loadProfile();
+  profilePanel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 cancelProfileBtn.addEventListener("click", () => {
   profilePanel.hidden = true;
   profileMessage.textContent = "";
   avatarFile.value = "";
-
   if (previewObjectUrl) {
     URL.revokeObjectURL(previewObjectUrl);
     previewObjectUrl = null;
   }
-
   if (currentAvatarUrl) {
     avatarPreview.src = currentAvatarUrl;
     avatarPreview.hidden = false;
@@ -716,17 +668,17 @@ cancelProfileBtn.addEventListener("click", () => {
     avatarPreview.removeAttribute("src");
     avatarPreview.hidden = true;
   }
+  feedPanel.hidden = false;
+  feed.hidden = false;
+  composer.hidden = false;
 });
 
-/* Preview a selected profile picture */
 avatarFile.addEventListener("change", () => {
   const file = avatarFile.files && avatarFile.files[0];
-
   if (previewObjectUrl) {
     URL.revokeObjectURL(previewObjectUrl);
     previewObjectUrl = null;
   }
-
   if (!file) {
     if (currentAvatarUrl) {
       avatarPreview.src = currentAvatarUrl;
@@ -735,202 +687,110 @@ avatarFile.addEventListener("change", () => {
       avatarPreview.removeAttribute("src");
       avatarPreview.hidden = true;
     }
-
     return;
   }
-
-  const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    profileMessage.textContent =
-      "Please choose a JPG, PNG, or WebP picture.";
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    profileMessage.textContent = "Please choose a JPG, PNG, or WebP picture.";
     avatarFile.value = "";
     return;
   }
-
   if (file.size > 2 * 1024 * 1024) {
-    profileMessage.textContent =
-      "Your picture is too large. Please choose a picture under 2 MB.";
+    profileMessage.textContent = "Your picture must be 2 MB or smaller.";
     avatarFile.value = "";
     return;
   }
-
   profileMessage.textContent = "";
   previewObjectUrl = URL.createObjectURL(file);
   avatarPreview.src = previewObjectUrl;
   avatarPreview.hidden = false;
 });
 
-/* Save the display name and optional profile picture */
 saveProfileBtn.addEventListener("click", async () => {
-  if (!currentUser || !supabaseClient) {
-    profileMessage.textContent = "Please log in first.";
-    return;
-  }
-
+  if (!currentUser || !supabaseClient) return;
   const displayName = profileName.value.trim();
   const file = avatarFile.files && avatarFile.files[0];
 
   if (!displayName) {
-    profileMessage.textContent =
-      "Please enter the display name you want people to see.";
+    profileMessage.textContent = "Please enter a display name.";
     profileName.focus();
     return;
   }
-
-  if (displayName.length > 40) {
-    profileMessage.textContent =
-      "Your display name must be 40 characters or fewer.";
+  if (file && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    profileMessage.textContent = "Please choose a JPG, PNG, or WebP picture.";
     return;
   }
-
-  const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
-
-  if (file && !allowedTypes.includes(file.type)) {
-    profileMessage.textContent =
-      "Please choose a JPG, PNG, or WebP picture.";
-    return;
-  }
-
   if (file && file.size > 2 * 1024 * 1024) {
-    profileMessage.textContent =
-      "Your picture must be 2 MB or smaller.";
+    profileMessage.textContent = "Your picture must be 2 MB or smaller.";
     return;
   }
 
   saveProfileBtn.disabled = true;
   profileMessage.textContent = "Saving your profile...";
-
   try {
     let avatarUrl = currentAvatarUrl;
-
-    /* Upload a new picture if one was selected */
     if (file) {
-      const safeExtension = {
-        "image/jpeg": "jpg",
-        "image/png": "png",
-        "image/webp": "webp"
-      }[file.type];
-
-      const filePath =
-        currentUser.id + "/" +
-        Date.now() + "." + safeExtension;
-
-      const { error: uploadError } = await supabaseClient
-        .storage
+      const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[file.type];
+      const filePath = currentUser.id + "/" + Date.now() + "." + ext;
+      const { error: uploadError } = await supabaseClient.storage
         .from("avatars")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: file.type
-        });
-
+        .upload(filePath, file, { cacheControl: "3600", upsert: false, contentType: file.type });
       if (uploadError) throw uploadError;
-
-      const { data: publicData } = supabaseClient
-        .storage
-        .from("avatars")
-        .getPublicUrl(filePath);
-
-      avatarUrl = publicData.publicUrl;
+      avatarUrl = supabaseClient.storage.from("avatars").getPublicUrl(filePath).data.publicUrl;
     }
 
-    /* Update the existing profile first */
-    const { data: updatedProfile, error: updateError } =
-      await supabaseClient
-        .from("profiles")
-        .update({
-          display_name: displayName,
-          avatar_url: avatarUrl
-        })
-        .eq("id", currentUser.id)
-        .select("id")
-        .maybeSingle();
-
+    const { data: updated, error: updateError } = await supabaseClient
+      .from("profiles")
+      .update({ display_name: displayName, avatar_url: avatarUrl })
+      .eq("id", currentUser.id)
+      .select("id")
+      .maybeSingle();
     if (updateError) throw updateError;
 
-    /* Create a profile if this account has no profile row yet */
-    if (!updatedProfile) {
-      const fallbackUsername =
-        "member_" + currentUser.id.replace(/-/g, "").slice(0, 16);
-
-      const { error: insertError } = await supabaseClient
-        .from("profiles")
-        .insert({
-          id: currentUser.id,
-          username: fallbackUsername,
-          display_name: displayName,
-          avatar_url: avatarUrl
-        });
-
+    if (!updated) {
+      const username = "member_" + currentUser.id.replace(/-/g, "").slice(0, 16);
+      const { error: insertError } = await supabaseClient.from("profiles").insert({
+        id: currentUser.id,
+        username,
+        display_name: displayName,
+        avatar_url: avatarUrl
+      });
       if (insertError) throw insertError;
     }
 
     currentAvatarUrl = avatarUrl;
-
     if (previewObjectUrl) {
       URL.revokeObjectURL(previewObjectUrl);
       previewObjectUrl = null;
     }
-
     profileMessage.textContent = "Your profile was saved successfully!";
-
     await loadPosts();
-
-    /* Refresh the preview using the saved public picture URL */
     if (currentAvatarUrl) {
       avatarPreview.src = currentAvatarUrl;
       avatarPreview.hidden = false;
-    } else {
-      avatarPreview.removeAttribute("src");
-      avatarPreview.hidden = true;
     }
   } catch (error) {
-    profileMessage.textContent =
-      "Could not save your profile: " + friendlyError(error);
+    profileMessage.textContent = "Could not save your profile: " + friendlyError(error);
   } finally {
     saveProfileBtn.disabled = false;
   }
 });
 
-/* Create a new account */
+/* Sign up */
 signupBtn.addEventListener("click", async () => {
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
-
-  if (!email || !password) {
-    showAuthMessage("Please enter your email and password.");
-    return;
-  }
-
-  if (password.length < 6) {
-    showAuthMessage("Please use a password with at least 6 characters.");
-    return;
-  }
+  const email = $("signupEmail").value.trim();
+  const password = $("signupPassword").value;
+  if (!email || !password) return showAuthMessage("Please enter your email and password.");
+  if (password.length < 6) return showAuthMessage("Use a password with at least 6 characters.");
 
   signupBtn.disabled = true;
   showAuthMessage("Creating your account...");
-
   try {
     const { data, error } = await supabaseClient.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo:
-          window.location.origin + window.location.pathname
-      }
+      options: { emailRedirectTo: window.location.origin + window.location.pathname }
     });
-
     if (error) throw error;
-
     if (data.session && data.user) {
       currentUser = data.user;
       updateInterface();
@@ -938,9 +798,7 @@ signupBtn.addEventListener("click", async () => {
       await loadProfile();
       await loadPosts();
     } else {
-      showAuthMessage(
-        "Your account request was received. Check your email and click the confirmation link before logging in."
-      );
+      showAuthMessage("Check your email and click the confirmation link before logging in.");
     }
   } catch (error) {
     showAuthMessage(friendlyError(error));
@@ -951,31 +809,18 @@ signupBtn.addEventListener("click", async () => {
 
 /* Log in */
 loginBtn.addEventListener("click", async () => {
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
-
-  if (!email || !password) {
-    showAuthMessage("Please enter your email and password.");
-    return;
-  }
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  if (!email || !password) return showAuthMessage("Please enter your email and password.");
 
   loginBtn.disabled = true;
   showAuthMessage("Logging in...");
-
   try {
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
-
     currentUser = data.user;
     updateInterface();
-
     status.textContent = "You are logged in successfully!";
-
     await loadProfile();
     await loadPosts();
   } catch (error) {
@@ -988,12 +833,9 @@ loginBtn.addEventListener("click", async () => {
 /* Log out */
 logoutBtn.addEventListener("click", async () => {
   logoutBtn.disabled = true;
-
   try {
     const { error } = await supabaseClient.auth.signOut();
-
     if (error) throw error;
-
     currentUser = null;
     updateInterface();
     showAuthMessage("You have logged out.");
@@ -1004,17 +846,13 @@ logoutBtn.addEventListener("click", async () => {
   }
 });
 
-/* Publish a community post */
+/* Publish a post */
 publishBtn.addEventListener("click", async () => {
-  if (publishBtn.disabled) return;
-
   if (!currentUser) {
     status.textContent = "Please log in before publishing.";
     return;
   }
-
   const content = postText.value.trim();
-
   if (!content) {
     status.textContent = "Write something before publishing.";
     return;
@@ -1022,53 +860,35 @@ publishBtn.addEventListener("click", async () => {
 
   publishBtn.disabled = true;
   status.textContent = "Publishing your post...";
-
   try {
-    const { error } = await supabaseClient
-      .from("posts")
-      .insert({
-        user_id: currentUser.id,
-        content: content
-      });
-
+    const { error } = await supabaseClient.from("posts").insert({
+      user_id: currentUser.id,
+      content
+    });
     if (error) throw error;
-
     postText.value = "";
     status.textContent = "Your post was saved!";
     await loadPosts();
   } catch (error) {
-    status.textContent =
-      "Could not publish: " + friendlyError(error);
+    status.textContent = "Could not publish: " + friendlyError(error);
   } finally {
     publishBtn.disabled = false;
   }
 });
 
-/* Restore the existing login session when the page opens */
+/* Restore the login session */
 async function initialize() {
   if (!window.supabase) {
-    showAuthMessage(
-      "The connection library did not load. Refresh the page and try again."
-    );
+    showAuthMessage("The connection library did not load. Refresh and try again.");
     return;
   }
 
-  supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
   const { data, error } = await supabaseClient.auth.getSession();
+  if (error) showAuthMessage("Could not check your login: " + friendlyError(error));
 
-  if (error) {
-    showAuthMessage(
-      "Could not check your login: " + friendlyError(error)
-    );
-  }
-
-  currentUser =
-    data && data.session ? data.session.user : null;
-
+  currentUser = data && data.session ? data.session.user : null;
   updateInterface();
 
   if (currentUser) {
@@ -1076,13 +896,16 @@ async function initialize() {
     await loadPosts();
   }
 
-  
-  /* Keep the interface updated when login status changes */
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     currentUser = session ? session.user : null;
     updateInterface();
+    if (currentUser) {
+      setTimeout(() => {
+        loadProfile();
+        loadPosts();
+      }, 0);
+    }
   });
-
 }
 
 initialize();
