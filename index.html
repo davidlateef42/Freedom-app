@@ -807,28 +807,42 @@ signupBtn.addEventListener("click", async () => {
   }
 });
 
+ 
 /* Log in */
 loginBtn.addEventListener("click", async () => {
   const email = $("loginEmail").value.trim();
   const password = $("loginPassword").value;
-  if (!email || !password) return showAuthMessage("Please enter your email and password.");
+
+  if (!email || !password) {
+    return showAuthMessage("Please enter your email and password.");
+  }
 
   loginBtn.disabled = true;
   showAuthMessage("Logging in...");
+
   try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
     if (error) throw error;
+
     currentUser = data.user;
     updateInterface();
+
+    showAuthMessage("Login successful! Welcome to Freedom.");
     status.textContent = "You are logged in successfully!";
-    await loadProfile();
-    await loadPosts();
+
   } catch (error) {
     showAuthMessage(friendlyError(error));
+
   } finally {
     loginBtn.disabled = false;
   }
 });
+
 
 /* Log out */
 logoutBtn.addEventListener("click", async () => {
@@ -896,16 +910,20 @@ async function initialize() {
     await loadPosts();
   }
 
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    currentUser = session ? session.user : null;
-    updateInterface();
-    if (currentUser) {
-      setTimeout(() => {
-        loadProfile();
-        loadPosts();
-      }, 0);
-    }
-  });
+ 
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  currentUser = session ? session.user : null;
+  updateInterface();
+
+  if (event === "SIGNED_IN" && currentUser) {
+    setTimeout(async () => {
+      await loadProfile();
+      await loadPosts();
+    }, 0);
+  }
+});
+
+ 
 }
 
 initialize();
