@@ -224,6 +224,7 @@ const closeMessagesBtn = $("closeMessagesBtn");
 const backToConversationsBtn = $("backToConversationsBtn");
 
 let activeChatFriend = null;
+let messagesRealtimeChannel = null;
 
 const logoutBtn = $("logoutBtn");
 const profileBtn = $("profileBtn");
@@ -878,7 +879,63 @@ async function loadConversationMessages() {
       "Could not load messages: " + friendlyError(error);
   }
 }
-  async function sendPrivateMessage() {
+
+// Listen for new incoming messages
+async function startMessagesRealtime() {
+  if (!currentUser || !supabaseClient) return;
+
+  if (messagesRealtimeChannel) {
+    await supabaseClient.removeChannel(messagesRealtimeChannel);
+    messagesRealtimeChannel = null;
+  }
+
+  messagesRealtimeChannel = supabaseClient
+    .channel("messages-" + currentUser.id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+        filter: "receiver_id=eq." + currentUser.id
+      },
+      async payload => {
+        if (!currentUser) return;
+
+        const newMessage = payload.new;
+
+        if (activeChatFriend && newMessage.sender_id === activeChatFriend.id) {
+          const { error } = await supabaseClient
+            .from("messages")
+            .update({ read_at: new Date().toISOString() })
+            .eq("id", newMessage.id)
+            .eq("receiver_id", currentUser.id);
+
+          if (error) console.error("Mark message as read:", error);
+
+          await loadConversationMessages();
+          await refreshUnreadCount();
+        } else {
+          await refreshUnreadCount();
+
+          if (!messagesPanel.hidden && chatPanel.hidden) {
+            await loadConversations();
+          }
+        }
+      }
+    )
+    .subscribe();
+}
+
+// Stop listening when the user logs out
+async function stopMessagesRealtime() {
+  if (messagesRealtimeChannel && supabaseClient) {
+    await supabaseClient.removeChannel(messagesRealtimeChannel);
+    messagesRealtimeChannel = null;
+  }
+}
+
+async function sendPrivateMessage() {
   if (!currentUser || !activeChatFriend) return;
 
   const content = messageInput.value.trim();
@@ -1258,12 +1315,23 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
   updateInterface();
 
   if (event === "SIGNED_IN" && currentUser) {
+    startMessagesRealtime();
+
     setTimeout(async () => {
       await loadProfile();
       await loadPosts();
     }, 0);
   }
+
+  if (event === "SIGNED_OUT") {
+    stopMessagesRealtime();
+  }
 });
+
+// Start listening if a login session already exists
+if (currentUser) {
+  startMessagesRealtime();
+}
 
  
 }
