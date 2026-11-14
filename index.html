@@ -480,14 +480,16 @@ async function getProfilesByIds(ids) {
   return data || [];
 }
 
-async function loadFriendRequests() {
+  async function loadFriendRequests() {
   friendRequestsList.replaceChildren();
+
   const { data: requests, error } = await supabaseClient
     .from("friend_requests")
     .select("id,sender_id,receiver_id,status,created_at")
     .eq("receiver_id", currentUser.id)
     .eq("status", "pending")
     .order("created_at", { ascending: false });
+
   if (error) throw error;
 
   if (!requests || requests.length === 0) {
@@ -495,12 +497,18 @@ async function loadFriendRequests() {
     return;
   }
 
-  const profiles = await getProfilesByIds(requests.map(request => request.sender_id));
-  const profileMap = new Map(profiles.map(profile => [profile.id, profile]));
+  const profiles = await getProfilesByIds(
+    requests.map(request => request.sender_id)
+  );
+
+  const profileMap = new Map(
+    profiles.map(profile => [profile.id, profile])
+  );
 
   requests.forEach(request => {
     const profile = profileMap.get(request.sender_id);
     if (!profile) return;
+
     addMemberRow(friendRequestsList, profile, [
       {
         label: "Accept",
@@ -517,15 +525,19 @@ async function loadFriendRequests() {
 
 async function loadMyFriends() {
   myFriendsList.replaceChildren();
+
   const { data: requests, error } = await supabaseClient
     .from("friend_requests")
     .select("sender_id,receiver_id,status")
     .eq("status", "accepted")
     .or("sender_id.eq." + currentUser.id + ",receiver_id.eq." + currentUser.id);
+
   if (error) throw error;
 
   const friendIds = (requests || []).map(request =>
-    request.sender_id === currentUser.id ? request.receiver_id : request.sender_id
+    request.sender_id === currentUser.id
+      ? request.receiver_id
+      : request.sender_id
   );
 
   if (!friendIds.length) {
@@ -534,6 +546,7 @@ async function loadMyFriends() {
   }
 
   const profiles = await getProfilesByIds(friendIds);
+
   if (!profiles.length) {
     myFriendsList.textContent = "Your friends could not be displayed.";
     return;
@@ -541,7 +554,6 @@ async function loadMyFriends() {
 
   profiles.forEach(profile => addMemberRow(myFriendsList, profile));
 }
-
 async function refreshFriends() {
   if (!currentUser || !supabaseClient) return;
   friendsMessage.textContent = "Loading your friends...";
@@ -670,8 +682,32 @@ async function respondToRequest(requestId, newStatus) {
   } catch (error) {
     friendsMessage.textContent = "Could not update request: " + friendlyError(error);
   }
+  
 }
 
+// Count unread messages
+async function refreshUnreadCount() {
+  if (!currentUser || !supabaseClient) return;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("messages")
+      .select("id")
+      .eq("receiver_id", currentUser.id)
+      .is("read_at", null);
+
+    if (error) throw error;
+
+    const count = (data || []).length;
+    messagesNavBtn.textContent = count > 0
+      ? "💬 Messages (" + count + ")"
+      : "💬 Messages";
+  } catch (error) {
+    console.error("Unread message count:", error);
+  }
+}
+
+// Load friends into the conversation list
 async function loadConversations() {
   if (!currentUser || !supabaseClient) return;
 
@@ -693,6 +729,25 @@ async function loadConversations() {
         : request.sender_id
     ))];
 
+    const { data: unreadMessages, error: unreadError } = await supabaseClient
+      .from("messages")
+      .select("sender_id")
+      .eq("receiver_id", currentUser.id)
+      .is("read_at", null);
+
+    if (unreadError) throw unreadError;
+
+    const unreadCounts = new Map();
+
+    (unreadMessages || []).forEach(message => {
+      unreadCounts.set(
+        message.sender_id,
+        (unreadCounts.get(message.sender_id) || 0) + 1
+      );
+    });
+
+    await refreshUnreadCount();
+
     if (!friendIds.length) {
       conversationList.textContent =
         "You have no friends yet. Add friends before starting a conversation.";
@@ -708,18 +763,24 @@ async function loadConversations() {
     }
 
     profiles.forEach(profile => {
+      const unreadCount = unreadCounts.get(profile.id) || 0;
+
       addMemberRow(conversationList, profile, [{
-        label: "Message",
+        label: unreadCount > 0
+          ? "Message (" + unreadCount + " new)"
+          : "Message",
         primary: true,
         onClick: () => openConversation(profile)
       }]);
     });
+
   } catch (error) {
     conversationList.textContent =
       "Could not load conversations: " + friendlyError(error);
   }
 }
 
+// Open a private conversation
 async function openConversation(friend) {
   activeChatFriend = friend;
   conversationList.hidden = true;
@@ -731,9 +792,27 @@ async function openConversation(friend) {
   messageInput.value = "";
   messageStatus.textContent = "";
 
+  try {
+    const { error } = await supabaseClient
+      .from("messages")
+      .update({ read_at: new Date().toISOString() })
+      .eq("sender_id", friend.id)
+      .eq("receiver_id", currentUser.id)
+      .is("read_at", null);
+
+    if (error) throw error;
+
+    await refreshUnreadCount();
+
+  } catch (error) {
+    messageStatus.textContent =
+      "Could not update read status: " + friendlyError(error);
+  }
+
   await loadConversationMessages();
 }
 
+// Load messages between you and your friend
 async function loadConversationMessages() {
   if (!currentUser || !activeChatFriend) return;
 
@@ -764,6 +843,7 @@ async function loadConversationMessages() {
 
     data.forEach(message => {
       const bubble = document.createElement("div");
+
       bubble.style.padding = "10px 12px";
       bubble.style.margin = "8px 0";
       bubble.style.maxWidth = "85%";
@@ -781,6 +861,7 @@ async function loadConversationMessages() {
 
       const time = document.createElement("small");
       time.className = "muted";
+
       const date = new Date(message.created_at);
       time.textContent = Number.isNaN(date.getTime())
         ? ""
@@ -791,13 +872,13 @@ async function loadConversationMessages() {
     });
 
     messagesList.scrollTop = messagesList.scrollHeight;
+
   } catch (error) {
     messagesList.textContent =
       "Could not load messages: " + friendlyError(error);
   }
 }
-
-async function sendPrivateMessage() {
+  async function sendPrivateMessage() {
   if (!currentUser || !activeChatFriend) return;
 
   const content = messageInput.value.trim();
@@ -1169,8 +1250,8 @@ async function initialize() {
   if (currentUser) {
     await loadProfile();
     await loadPosts();
-  }
-
+    await refreshUnreadCount();
+}
  
 supabaseClient.auth.onAuthStateChange((event, session) => {
   currentUser = session ? session.user : null;
