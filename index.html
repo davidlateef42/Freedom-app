@@ -43,7 +43,7 @@ label{display:block;font-size:14px;font-weight:700;margin-top:8px}
 .member{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e5eaf2;flex-wrap:wrap}
 .member-info{flex:1;min-width:120px}
 .member-info strong{display:block;overflow-wrap:anywhere}
-.member-info small{color:#6c778b}
+.member-info small{display:block;color:#6c778b}
 .member-actions{display:flex;gap:6px;flex-wrap:wrap}
 .member-actions button{padding:9px 11px}
 footer{text-align:center;padding:30px;color:#778196;font-size:13px}
@@ -440,7 +440,7 @@ async function loadPosts() {
   }
 }
 
-function addMemberRow(container, profile, actions = []) {
+function addMemberRow(container, profile, actions = [], subtitle = "") {
   const row = document.createElement("div");
   row.className = "member";
   row.append(createAvatar(profile.avatar_url, profile.display_name || profile.username));
@@ -452,8 +452,14 @@ function addMemberRow(container, profile, actions = []) {
   const username = document.createElement("small");
   username.textContent = profile.username ? "@" + profile.username : "Freedom member";
   info.append(name, username);
-  row.append(info);
 
+if (subtitle) {
+  const preview = document.createElement("small");
+  preview.textContent = subtitle;
+  info.append(preview);
+}
+
+row.append(info);
   if (actions.length) {
     const actionBox = document.createElement("div");
     actionBox.className = "member-actions";
@@ -756,6 +762,38 @@ async function loadConversations() {
     }
 
     const profiles = await getProfilesByIds(friendIds);
+   const { data: recentMessages, error: recentError } = await supabaseClient
+  .from("messages")
+  .select("sender_id,receiver_id,content,created_at")
+  .or(
+    "sender_id.eq." + currentUser.id +
+    ",receiver_id.eq." + currentUser.id
+  )
+  .order("created_at", { ascending: false })
+  .limit(100);
+
+if (recentError) throw recentError;
+
+const latestByFriend = new Map();
+
+(recentMessages || []).forEach(message => {
+  const friendId = message.sender_id === currentUser.id
+    ? message.receiver_id
+    : message.sender_id;
+
+  if (friendIds.includes(friendId) && !latestByFriend.has(friendId)) {
+    latestByFriend.set(friendId, message);
+  }
+});
+   profiles.sort((a, b) => {
+  const aDate = latestByFriend.get(a.id)?.created_at;
+  const bDate = latestByFriend.get(b.id)?.created_at;
+
+  if (!aDate) return bDate ? 1 : 0;
+  if (!bDate) return -1;
+
+  return new Date(bDate) - new Date(aDate);
+});
     conversationList.replaceChildren();
 
     if (!profiles.length) {
@@ -764,16 +802,36 @@ async function loadConversations() {
     }
 
     profiles.forEach(profile => {
-      const unreadCount = unreadCounts.get(profile.id) || 0;
+  const unreadCount = unreadCounts.get(profile.id) || 0;
+  const latest = latestByFriend.get(profile.id);
 
-      addMemberRow(conversationList, profile, [{
-        label: unreadCount > 0
-          ? "Message (" + unreadCount + " new)"
-          : "Message",
-        primary: true,
-        onClick: () => openConversation(profile)
-      }]);
-    });
+  let preview = latest ? latest.content : "No messages yet";
+
+  if (latest && latest.sender_id === currentUser.id) {
+    preview = "You: " + preview;
+  }
+
+  if (preview.length > 55) {
+    preview = preview.slice(0, 55) + "…";
+  }
+
+  const time = latest
+    ? new Date(latest.created_at).toLocaleString([], {
+        dateStyle: "short",
+        timeStyle: "short"
+      })
+    : "";
+
+  const subtitle = latest ? preview + " · " + time : preview;
+
+  addMemberRow(conversationList, profile, [{
+    label: unreadCount > 0
+      ? "Message (" + unreadCount + " new)"
+      : "Message",
+    primary: true,
+    onClick: () => openConversation(profile)
+  }], subtitle);
+});
 
   } catch (error) {
     conversationList.textContent =
