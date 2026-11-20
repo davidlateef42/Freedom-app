@@ -53,11 +53,25 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
  header{padding:14px 16px}
  h1{font-size:23px}
  #authPanel{grid-template-columns:1fr}
+ }
+ #toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+  max-width:min(360px,calc(100% - 32px));
+  background:#172033;
+  color:#fff;
+  padding:14px 18px;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  display:none;
 }
 </style>
 </head>
 
 <body>
+ <div id="toast" role="status" aria-live="polite"></div>
 <header>
   <div class="logo">Freedom<span>.</span></div>
   <span class="pill">YOUR COMMUNITY STARTS HERE</span>
@@ -227,6 +241,8 @@ const notificationsPanel = $("notificationsPanel");
 const notificationsList = $("notificationsList");
 const closeNotificationsBtn = $("closeNotificationsBtn");
  const messagesNavBtn = $("messagesNavBtn");
+ const toast = $("toast");
+let toastTimer = null;
 const conversationList = $("conversationList");
 const chatPanel = $("chatPanel");
 const chatFriendName = $("chatFriendName");
@@ -242,6 +258,7 @@ const backToConversationsBtn = $("backToConversationsBtn");
 
 let activeChatFriend = null;
 let messagesRealtimeChannel = null;
+let friendRequestsRealtimeChannel = null;
 
 const logoutBtn = $("logoutBtn");
 const profileBtn = $("profileBtn");
@@ -282,6 +299,15 @@ function friendlyError(error) {
 
 function showAuthMessage(message) {
   authMessage.textContent = message;
+}
+ function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 5000);
 }
 
 function showHome() {
@@ -1088,7 +1114,54 @@ async function stopMessagesRealtime() {
     messagesRealtimeChannel = null;
   }
 }
+async function startFriendRequestsRealtime() {
+  if (!currentUser || !supabaseClient) return;
 
+  if (friendRequestsRealtimeChannel) {
+    await supabaseClient.removeChannel(friendRequestsRealtimeChannel);
+    friendRequestsRealtimeChannel = null;
+  }
+
+  friendRequestsRealtimeChannel = supabaseClient
+    .channel("friend-requests-" + currentUser.id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "friend_requests",
+        filter: "receiver_id=eq." + currentUser.id
+      },
+      async payload => {
+        if (!currentUser) return;
+
+        const request = payload.new;
+        if (request.status !== "pending") return;
+
+        const profiles = await getProfilesByIds([request.sender_id]);
+        const sender = profiles[0];
+        const name = sender?.display_name || sender?.username || "Someone";
+
+        showToast(name + " sent you a friend request!");
+
+        if (!notificationsPanel.hidden) {
+          await loadNotifications();
+        }
+
+        if (!friendsPanel.hidden) {
+          await refreshFriends();
+        }
+      }
+    )
+    .subscribe();
+}
+
+async function stopFriendRequestsRealtime() {
+  if (friendRequestsRealtimeChannel && supabaseClient) {
+    await supabaseClient.removeChannel(friendRequestsRealtimeChannel);
+    friendRequestsRealtimeChannel = null;
+  }
+}
 async function sendPrivateMessage() {
   if (!currentUser || !activeChatFriend) return;
 
@@ -1560,10 +1633,12 @@ async function initialize() {
   currentUser = data && data.session ? data.session.user : null;
   updateInterface();
 
-  if (currentUser) {
-    await loadProfile();
-    await loadPosts();
-    await refreshUnreadCount();
+if (currentUser) {
+  await loadProfile();
+  await loadPosts();
+  await refreshUnreadCount();
+  startMessagesRealtime();
+  startFriendRequestsRealtime();
 }
  
 supabaseClient.auth.onAuthStateChange((event, session) => {
@@ -1572,6 +1647,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
   if (event === "SIGNED_IN" && currentUser) {
     startMessagesRealtime();
+     startFriendRequestsRealtime();
 
     setTimeout(async () => {
       await loadProfile();
@@ -1580,16 +1656,10 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
   }
 
   if (event === "SIGNED_OUT") {
-    stopMessagesRealtime();
-  }
-});
-
-// Start listening if a login session already exists
-if (currentUser) {
-  startMessagesRealtime();
+  stopMessagesRealtime();
+  stopFriendRequestsRealtime();
 }
-
- 
+});
 }
 
 initialize();
