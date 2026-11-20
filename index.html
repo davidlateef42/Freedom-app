@@ -173,6 +173,9 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
 
     <label for="messageInput">Write a message</label>
     <textarea id="messageInput" maxlength="2000" placeholder="Type your message..."></textarea>
+   <label for="messagePhoto">Attach a photo (JPG, PNG, or WebP — max 5 MB)</label>
+<input type="file" id="messagePhoto" accept="image/jpeg,image/png,image/webp">
+<button class="secondary" id="sendPhotoBtn">Send photo</button>
     <button class="primary" id="sendMessageBtn">Send message</button>
     <p id="messageStatus" class="muted" aria-live="polite"></p>
   </div>
@@ -217,6 +220,8 @@ const chatPanel = $("chatPanel");
 const chatFriendName = $("chatFriendName");
 const messagesList = $("messagesList");
 const messageInput = $("messageInput");
+ const messagePhoto = $("messagePhoto");
+const sendPhotoBtn = $("sendPhotoBtn");
 const sendMessageBtn = $("sendMessageBtn");
 const messageStatus = $("messageStatus");
 
@@ -764,7 +769,7 @@ async function loadConversations() {
     const profiles = await getProfilesByIds(friendIds);
    const { data: recentMessages, error: recentError } = await supabaseClient
   .from("messages")
-  .select("sender_id,receiver_id,content,created_at")
+.select("sender_id, receiver_id, content, photo_path, created_at")
   .or(
     "sender_id.eq." + currentUser.id +
     ",receiver_id.eq." + currentUser.id
@@ -805,7 +810,9 @@ const latestByFriend = new Map();
   const unreadCount = unreadCounts.get(profile.id) || 0;
   const latest = latestByFriend.get(profile.id);
 
-  let preview = latest ? latest.content : "No messages yet";
+     let preview = latest
+  ? (latest.content || (latest.photo_path ? "📷 Photo" : ""))
+  : "No messages yet";
 
   if (latest && latest.sender_id === currentUser.id) {
     preview = "You: " + preview;
@@ -881,7 +888,7 @@ async function loadConversationMessages() {
   try {
     const { data, error } = await supabaseClient
       .from("messages")
-      .select("id,sender_id,receiver_id,content,created_at")
+     .select("id,sender_id,receiver_id,content,photo_path,created_at")
       .or(
         "and(sender_id.eq." + currentUser.id +
         ",receiver_id.eq." + activeChatFriend.id +
@@ -900,35 +907,60 @@ async function loadConversationMessages() {
       return;
     }
 
-    data.forEach(message => {
-      const bubble = document.createElement("div");
+    for (const message of data) {
+  const bubble = document.createElement("div");
 
-      bubble.style.padding = "10px 12px";
-      bubble.style.margin = "8px 0";
-      bubble.style.maxWidth = "85%";
-      bubble.style.borderRadius = "12px";
-      bubble.style.whiteSpace = "pre-wrap";
-      bubble.style.overflowWrap = "anywhere";
+  bubble.style.padding = "10px 12px";
+  bubble.style.margin = "8px 0";
+  bubble.style.maxWidth = "85%";
+  bubble.style.borderRadius = "12px";
+  bubble.style.whiteSpace = "pre-wrap";
+  bubble.style.overflowWrap = "anywhere";
 
-      const mine = message.sender_id === currentUser.id;
+  const mine = message.sender_id === currentUser.id;
 
-      bubble.style.marginLeft = mine ? "auto" : "0";
-      bubble.style.background = mine ? "#dceaff" : "#ffffff";
+  bubble.style.marginLeft = mine ? "auto" : "0";
+  bubble.style.background = mine ? "#dceaff" : "#ffffff";
 
-      const content = document.createElement("div");
-      content.textContent = message.content;
+  if (message.photo_path) {
+    const { data: signed, error: signedError } = await supabaseClient.storage
+      .from("message-photos")
+      .createSignedUrl(message.photo_path, 3600);
 
-      const time = document.createElement("small");
-      time.className = "muted";
+    if (!signedError && signed?.signedUrl) {
+      const photo = document.createElement("img");
+      photo.src = signed.signedUrl;
+      photo.alt = "Photo shared in chat";
+      photo.style.maxWidth = "100%";
+      photo.style.maxHeight = "240px";
+      photo.style.borderRadius = "8px";
+      photo.style.display = "block";
+      photo.style.marginBottom = "8px";
+      bubble.append(photo);
+    } else {
+      const photoError = document.createElement("p");
+      photoError.textContent = "Photo could not be loaded.";
+      bubble.append(photoError);
+    }
+  }
 
-      const date = new Date(message.created_at);
-      time.textContent = Number.isNaN(date.getTime())
-        ? ""
-        : date.toLocaleString();
+  if (message.content) {
+    const content = document.createElement("div");
+    content.textContent = message.content;
+    bubble.append(content);
+  }
 
-      bubble.append(content, time);
-      messagesList.append(bubble);
-    });
+  const time = document.createElement("small");
+  time.className = "muted";
+
+  const date = new Date(message.created_at);
+  time.textContent = Number.isNaN(date.getTime())
+    ? ""
+    : date.toLocaleString();
+
+  bubble.append(time);
+  messagesList.append(bubble);
+}
 
     messagesList.scrollTop = messagesList.scrollHeight;
 
@@ -1028,7 +1060,80 @@ async function sendPrivateMessage() {
     sendMessageBtn.disabled = false;
   }
 }
+async function sendPrivatePhoto() {
+  if (!currentUser || !activeChatFriend) return;
 
+  const file = messagePhoto.files && messagePhoto.files[0];
+
+  if (!file) {
+    messageStatus.textContent = "Please choose a photo first.";
+    return;
+  }
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    messageStatus.textContent = "Please choose a JPG, PNG, or WebP image.";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    messageStatus.textContent = "Photo must not be larger than 5 MB.";
+    return;
+  }
+
+  const caption = messageInput.value.trim();
+  const extension = file.type === "image/jpeg" ? "jpg" :
+    file.type === "image/png" ? "png" : "webp";
+
+  const filePath =
+    `${currentUser.id}/${activeChatFriend.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+
+  sendPhotoBtn.disabled = true;
+  messageStatus.textContent = "Uploading photo...";
+
+  try {
+    const { error: uploadError } = await supabaseClient.storage
+      .from("message-photos")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { error: insertError } = await supabaseClient
+      .from("messages")
+      .insert({
+        sender_id: currentUser.id,
+        receiver_id: activeChatFriend.id,
+        content: caption,
+        photo_path: filePath
+      });
+
+    if (insertError) {
+      await supabaseClient.storage
+        .from("message-photos")
+        .remove([filePath]);
+      throw insertError;
+    }
+
+    messageInput.value = "";
+    messagePhoto.value = "";
+    messageStatus.textContent = "Photo sent!";
+
+    await loadConversationMessages();
+
+  } catch (error) {
+    messageStatus.textContent =
+      "Could not send photo: " + friendlyError(error);
+  } finally {
+    sendPhotoBtn.disabled = false;
+  }
+}
+
+sendPhotoBtn.addEventListener("click", sendPrivatePhoto);
 sendMessageBtn.addEventListener("click", sendPrivateMessage);
 
 messagesNavBtn.addEventListener("click", async () => {
