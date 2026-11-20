@@ -64,6 +64,7 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
   <div class="actions">
     <button id="friendsNavBtn" class="secondary" hidden>👥 Friends</button>
    <button id="messagesNavBtn" class="secondary" hidden>💬 Messages</button>
+   <button id="notificationsNavBtn" class="secondary" hidden>🔔 Notifications</button>
     <button id="profileBtn" class="secondary" hidden>Edit profile</button>
     <button id="logoutBtn" class="secondary" hidden>Log out</button>
   </div>
@@ -182,7 +183,14 @@ footer{text-align:center;padding:30px;color:#778196;font-size:13px}
 
   <button class="secondary" id="closeMessagesBtn">Back to feed</button>
 </div>
-
+<div class="card" id="notificationsPanel" hidden>
+  <h3>🔔 Notifications</h3>
+  <p class="muted">Your latest activity will appear here.</p>
+  <div id="notificationsList">
+    <p class="muted">Loading notifications...</p>
+  </div>
+  <button class="secondary" id="closeNotificationsBtn">Back to feed</button>
+</div>
     <div class="card" id="feedPanel">
       <h3>Community feed</h3>
       <p id="feedMessage" class="muted">Sign in to view community posts.</p>
@@ -214,7 +222,11 @@ const feedPanel = $("feedPanel");
 const friendsPanel = $("friendsPanel");
  
 const messagesPanel = $("messagesPanel");
-const messagesNavBtn = $("messagesNavBtn");
+const notificationsNavBtn = $("notificationsNavBtn");
+const notificationsPanel = $("notificationsPanel");
+const notificationsList = $("notificationsList");
+const closeNotificationsBtn = $("closeNotificationsBtn");
+ const messagesNavBtn = $("messagesNavBtn");
 const conversationList = $("conversationList");
 const chatPanel = $("chatPanel");
 const chatFriendName = $("chatFriendName");
@@ -274,6 +286,7 @@ function showAuthMessage(message) {
 
 function showHome() {
   messagesPanel.hidden = true;
+  notificationsPanel.hidden = true;
   chatPanel.hidden = true;
   conversationList.hidden = false;
   activeChatFriend = null;
@@ -294,6 +307,7 @@ function updateInterface() {
   profileBtn.hidden = !loggedIn;
   friendsNavBtn.hidden = !loggedIn;
  messagesNavBtn.hidden = !loggedIn;
+ notificationsNavBtn.hidden = !loggedIn;
 
   if (!loggedIn) {
     messagesPanel.hidden = true;
@@ -696,8 +710,58 @@ async function respondToRequest(requestId, newStatus) {
   }
   
 }
+ 
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
+}
+// Load notifications
+async function loadNotifications() {
+  if (!currentUser || !supabaseClient) return;
 
-// Count unread messages
+  notificationsList.innerHTML = "<p>Loading notifications...</p>";
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("friend_requests")
+      .select("id, sender_id, status, created_at")
+      .eq("receiver_id", currentUser.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      notificationsList.innerHTML = "<p>No notifications yet.</p>";
+      return;
+    }
+
+    const senderIds = [...new Set(data.map(item => item.sender_id))];
+    const profiles = await getProfilesByIds(senderIds);
+
+    notificationsList.innerHTML = data.map(item => {
+      const sender = profiles.find(p => p.id === item.sender_id);
+      const name = sender?.display_name || sender?.username || "Someone";
+
+      return `
+        <div class="notification-item">
+          <p><strong>${escapeHTML(name)}</strong> sent you a friend request.</p>
+          <small>${new Date(item.created_at).toLocaleString()}</small>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    notificationsList.innerHTML =
+      "<p>Could not load notifications: " +
+      friendlyError(error) + "</p>";
+  }
+}
+ // Count unread messages
 async function refreshUnreadCount() {
   if (!currentUser || !supabaseClient) return;
 
@@ -1153,10 +1217,39 @@ messagesNavBtn.addEventListener("click", async () => {
   await loadConversations();
   messagesPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+ notificationsNavBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+
+  messagesPanel.hidden = true;
+  chatPanel.hidden = true;
+  conversationList.hidden = false;
+  friendsPanel.hidden = true;
+  profilePanel.hidden = true;
+  composer.hidden = true;
+  feedPanel.hidden = true;
+  feed.hidden = true;
+
+  notificationsPanel.hidden = false;
+
+  await loadNotifications();
+
+  notificationsPanel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
 
 closeMessagesBtn.addEventListener("click", () => {
   showHome();
   messagesPanel.hidden = true;
+  feedPanel.hidden = false;
+  feed.hidden = false;
+  composer.hidden = false;
+  feedPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+ closeNotificationsBtn.addEventListener("click", () => {
+  notificationsPanel.hidden = true;
+  showHome();
   feedPanel.hidden = false;
   feed.hidden = false;
   composer.hidden = false;
