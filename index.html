@@ -1153,7 +1153,10 @@ async function startFriendRequestsRealtime() {
         }
       }
     )
-    .subscribe();
+   .subscribe((status, err) => {
+  console.log("Friend requests realtime status:", status);
+  if (err) console.error("Friend requests realtime error:", err);
+});
 }
 
 async function stopFriendRequestsRealtime() {
