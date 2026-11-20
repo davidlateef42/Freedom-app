@@ -1135,7 +1135,8 @@ async function startFriendRequestsRealtime() {
       async payload => {
         if (!currentUser) return;
 
-        const request = payload.new;
+       console.log("Friend request event received:", payload);
+       const request = payload.new;
         if (request.status !== "pending") return;
 
         const profiles = await getProfilesByIds([request.sender_id]);
